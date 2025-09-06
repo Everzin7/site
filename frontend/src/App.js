@@ -1228,7 +1228,7 @@ function App() {
                     <span className="group-hover:translate-x-1 transition-transform">→</span>
                   </button>
                   <button 
-                    onClick={() => user ? setCurrentView('simulator') : setShowLogin(true)}
+                    onClick={() => setCurrentView('simulator')}
                     className="group px-10 py-5 bg-black/50 text-white rounded-2xl text-xl font-bold border-2 border-purple-500/50 hover:bg-purple-900/30 hover:border-purple-400 transform hover:scale-105 transition-all duration-300 backdrop-blur-sm flex items-center justify-center space-x-3"
                   >
                     {Icons.phone}
