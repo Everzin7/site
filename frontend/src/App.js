@@ -443,29 +443,39 @@ function App() {
     setIsTyping(true);
     
     try {
-      const response = await fetch(`${API_BASE}/api/chat/simulate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          bot_id: botConfig.id,
-          session_id: chatSession.session_id || 'demo-session-' + Date.now(),
-          message: currentMessage
-        })
-      });
+      let botResponse;
       
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${await response.text()}`);
-      }
-      
-      const data = await response.json();
-      
-      if (!chatSession.session_id) {
-        setChatSession(prev => ({ ...prev, session_id: data.session_id }));
+      if (!user) {
+        // Modo demo - respostas simuladas
+        botResponse = await generateDemoResponse(currentMessage, chatSession.messages.length);
+      } else {
+        // Modo com usuário logado - API real
+        const response = await fetch(`${API_BASE}/api/chat/simulate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            bot_id: botConfig.id,
+            session_id: chatSession.session_id || 'demo-session-' + Date.now(),
+            message: currentMessage
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+        }
+        
+        const data = await response.json();
+        
+        if (!chatSession.session_id) {
+          setChatSession(prev => ({ ...prev, session_id: data.session_id }));
+        }
+        
+        botResponse = data.bot_response;
       }
       
       const botMessage = {
         id: Date.now() + 1,
-        message: data.bot_response,
+        message: botResponse,
         sender: 'bot',
         timestamp: new Date().toISOString()
       };
@@ -484,7 +494,7 @@ function App() {
       
       const errorMessage = {
         id: Date.now() + 1,
-        message: "⚠️ Erro ao processar mensagem. Tente salvar a configuração do bot primeiro.",
+        message: "⚠️ Erro ao processar mensagem. Tente novamente.",
         sender: 'bot',
         timestamp: new Date().toISOString()
       };
@@ -494,6 +504,91 @@ function App() {
         messages: [...prev.messages, errorMessage]
       }));
     }
+  };
+
+  // Função para gerar respostas demo
+  const generateDemoResponse = async (userMessage, messageCount) => {
+    // Simular delay da IA
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // Primeira mensagem - boas vindas
+    if (messageCount <= 1) {
+      const response = botConfig.welcome_message;
+      const buttons = botConfig.buttons;
+      if (buttons.length > 0) {
+        let buttonText = "\n\nEscolha uma opção:";
+        buttons.forEach((button, index) => {
+          buttonText += `\n${index + 1}. ${button.text}`;
+        });
+        return response + buttonText;
+      }
+      return response;
+    }
+    
+    // Verificar se é um número (opção do botão)
+    const buttonIndex = parseInt(userMessage.trim()) - 1;
+    if (!isNaN(buttonIndex) && buttonIndex >= 0 && buttonIndex < botConfig.buttons.length) {
+      const button = botConfig.buttons[buttonIndex];
+      if (button.action === 'show_catalog') {
+        return generateCatalogResponse();
+      } else if (button.action === 'custom_message') {
+        return button.response_message || 'Obrigado pelo contato!';
+      } else if (button.action === 'redirect') {
+        return `Acesse: ${button.redirect_url || '#'}`;
+      }
+    }
+    
+    // Respostas inteligentes simuladas
+    const lowerMessage = userMessage.toLowerCase();
+    
+    if (lowerMessage.includes('olá') || lowerMessage.includes('oi') || lowerMessage.includes('bom dia') || lowerMessage.includes('boa tarde')) {
+      return `Olá! Seja bem-vindo à ${botConfig.business_info.name}! Como posso ajudar você hoje?`;
+    }
+    
+    if (lowerMessage.includes('produto') || lowerMessage.includes('catálogo') || lowerMessage.includes('comprar')) {
+      return generateCatalogResponse();
+    }
+    
+    if (lowerMessage.includes('preço') || lowerMessage.includes('valor') || lowerMessage.includes('custa')) {
+      return 'Nossos preços são muito competitivos! Posso mostrar nosso catálogo completo para você escolher o que mais se adequa às suas necessidades.';
+    }
+    
+    if (lowerMessage.includes('obrigado') || lowerMessage.includes('obrigada') || lowerMessage.includes('valeu')) {
+      return 'Por nada! Fico feliz em ajudar. Se precisar de mais alguma coisa, é só falar! 😊';
+    }
+    
+    if (lowerMessage.includes('tchau') || lowerMessage.includes('até') || lowerMessage.includes('adeus')) {
+      return 'Até logo! Foi um prazer atendê-lo. Volte sempre que precisar! 👋';
+    }
+    
+    // Resposta padrão inteligente
+    const responses = [
+      `Entendo sua pergunta sobre "${userMessage}". Nossa equipe da ${botConfig.business_info.name} pode ajudar você com isso!`,
+      'Interessante! Vou verificar essa informação para você. Enquanto isso, posso mostrar nossos produtos?',
+      'Ótima pergunta! Nossa experiência na área nos permite oferecer as melhores soluções. Gostaria de saber mais?',
+      'Perfeito! Temos várias opções que podem atender exatamente o que você precisa. Posso apresentar algumas?'
+    ];
+    
+    return responses[Math.floor(Math.random() * responses.length)];
+  };
+
+  const generateCatalogResponse = () => {
+    if (botConfig.products.length === 0) {
+      return "Ainda não temos produtos cadastrados neste bot demo. Adicione alguns produtos no construtor para ver como funciona!";
+    }
+    
+    let response = "🛍️ **Nosso Catálogo:**\n\n";
+    botConfig.products.slice(0, 5).forEach(product => {
+      response += `📦 **${product.name}**\n`;
+      response += `💰 R$ ${product.price.toFixed(2)}\n`;
+      response += `📝 ${product.description}\n\n`;
+    });
+    
+    if (botConfig.products.length > 5) {
+      response += `... e mais ${botConfig.products.length - 5} produtos!`;
+    }
+    
+    return response;
   };
 
   const ensureBotExists = async () => {
