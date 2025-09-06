@@ -177,6 +177,22 @@ function App() {
   });
   const [showPixPayment, setShowPixPayment] = useState(false);
   const [pixPaymentData, setPixPaymentData] = useState(null);
+  const [giftcardData, setGiftcardData] = useState({
+    code: '',
+    amount: '',
+    created_by: ''
+  });
+  const [redeemCode, setRedeemCode] = useState('');
+  const [adminData, setAdminData] = useState({
+    totalUsers: 0,
+    totalDeposits: {
+      last7days: 0,
+      last14days: 0,
+      last28days: 0
+    },
+    recentUsers: [],
+    giftcards: []
+  });
   const [dashboardData, setDashboardData] = useState({
     totalBots: 12,
     activeBots: 8,
