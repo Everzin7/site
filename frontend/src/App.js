@@ -1220,7 +1220,7 @@ function App() {
                 
                 <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
                   <button 
-                    onClick={() => user ? setCurrentView('builder') : setShowRegister(true)}
+                    onClick={() => setCurrentView('builder')}
                     className="group px-10 py-5 bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-2xl text-xl font-bold hover:from-purple-600 hover:to-cyan-600 transform hover:scale-105 transition-all duration-300 shadow-2xl shadow-purple-500/50 hover:shadow-purple-500/70 flex items-center justify-center space-x-3"
                   >
                     {Icons.build}
