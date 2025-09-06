@@ -334,6 +334,483 @@ Teclado Mecânico,Teclado mecânico para programadores,199.99,Periféricos,https
         except Exception as e:
             print(f"❌ Chat history error: {e}")
             return False
+
+    # ========== ADMIN/MOD ROLES AND GIFTCARDS TESTS ==========
+    
+    def test_admin_login(self):
+        """Test admin user authentication"""
+        print("\n🔍 Testing Admin Login...")
+        
+        login_data = {
+            "email": "adm@ever.com",
+            "password": "everto1n"
+        }
+        
+        try:
+            response = self.session.post(f"{BACKEND_URL}/auth/login", json=login_data)
+            if response.status_code == 200:
+                user = response.json()
+                self.admin_user_id = user["id"]
+                print(f"✅ Admin login successful: {user['name']} (Role: {user['role']})")
+                print(f"   Admin ID: {self.admin_user_id}")
+                return True
+            else:
+                print(f"❌ Admin login failed: {response.status_code} - {response.text}")
+                return False
+        except Exception as e:
+            print(f"❌ Admin login error: {e}")
+            return False
+    
+    def test_mod_login(self):
+        """Test mod user authentication"""
+        print("\n🔍 Testing Mod Login...")
+        
+        login_data = {
+            "email": "mod@ever.com",
+            "password": "mod123"
+        }
+        
+        try:
+            response = self.session.post(f"{BACKEND_URL}/auth/login", json=login_data)
+            if response.status_code == 200:
+                user = response.json()
+                self.mod_user_id = user["id"]
+                print(f"✅ Mod login successful: {user['name']} (Role: {user['role']})")
+                print(f"   Mod ID: {self.mod_user_id}")
+                return True
+            else:
+                print(f"❌ Mod login failed: {response.status_code} - {response.text}")
+                return False
+        except Exception as e:
+            print(f"❌ Mod login error: {e}")
+            return False
+    
+    def test_regular_user_registration(self):
+        """Create a regular user for testing"""
+        print("\n🔍 Creating Regular User for Testing...")
+        
+        user_data = {
+            "name": "João Silva",
+            "email": "joao.silva@teste.com",
+            "password": "senha123"
+        }
+        
+        try:
+            response = self.session.post(f"{BACKEND_URL}/auth/register", json=user_data)
+            if response.status_code == 200:
+                user = response.json()
+                self.regular_user_id = user["id"]
+                print(f"✅ Regular user created: {user['name']} (ID: {self.regular_user_id})")
+                return True
+            else:
+                print(f"❌ Regular user creation failed: {response.status_code} - {response.text}")
+                return False
+        except Exception as e:
+            print(f"❌ Regular user creation error: {e}")
+            return False
+    
+    def test_admin_stats(self):
+        """Test admin statistics endpoint (admin only)"""
+        print("\n🔍 Testing Admin Stats (Admin Only)...")
+        
+        if not hasattr(self, 'admin_user_id'):
+            print("❌ No admin user ID available")
+            return False
+            
+        try:
+            response = self.session.get(f"{BACKEND_URL}/admin/stats?admin_user_id={self.admin_user_id}")
+            if response.status_code == 200:
+                stats = response.json()
+                print(f"✅ Admin stats retrieved successfully:")
+                print(f"   Total Users: {stats['totalUsers']}")
+                print(f"   Recent Users: {len(stats['recentUsers'])}")
+                print(f"   Total Deposits (7 days): R$ {stats['totalDeposits']['last7days']}")
+                return True
+            else:
+                print(f"❌ Admin stats failed: {response.status_code} - {response.text}")
+                return False
+        except Exception as e:
+            print(f"❌ Admin stats error: {e}")
+            return False
+    
+    def test_admin_list_users(self):
+        """Test admin list users endpoint (admin only)"""
+        print("\n🔍 Testing Admin List Users (Admin Only)...")
+        
+        if not hasattr(self, 'admin_user_id'):
+            print("❌ No admin user ID available")
+            return False
+            
+        try:
+            response = self.session.get(f"{BACKEND_URL}/admin/users?admin_user_id={self.admin_user_id}")
+            if response.status_code == 200:
+                users = response.json()
+                print(f"✅ Users list retrieved successfully: {len(users)} users")
+                for user in users[:3]:  # Show first 3 users
+                    print(f"   - {user['name']} ({user['email']}) - Role: {user['role']}")
+                return True
+            else:
+                print(f"❌ Admin list users failed: {response.status_code} - {response.text}")
+                return False
+        except Exception as e:
+            print(f"❌ Admin list users error: {e}")
+            return False
+    
+    def test_mod_cannot_access_admin_stats(self):
+        """Test that mod cannot access admin-only endpoints"""
+        print("\n🔍 Testing Mod Cannot Access Admin Stats...")
+        
+        if not hasattr(self, 'mod_user_id'):
+            print("❌ No mod user ID available")
+            return False
+            
+        try:
+            response = self.session.get(f"{BACKEND_URL}/admin/stats?admin_user_id={self.mod_user_id}")
+            if response.status_code == 403:
+                print("✅ Mod correctly denied access to admin stats")
+                return True
+            else:
+                print(f"❌ Mod should not have access to admin stats: {response.status_code}")
+                return False
+        except Exception as e:
+            print(f"❌ Mod admin stats test error: {e}")
+            return False
+    
+    def test_regular_user_cannot_access_admin(self):
+        """Test that regular users cannot access admin endpoints"""
+        print("\n🔍 Testing Regular User Cannot Access Admin Endpoints...")
+        
+        if not hasattr(self, 'regular_user_id'):
+            print("❌ No regular user ID available")
+            return False
+            
+        try:
+            response = self.session.get(f"{BACKEND_URL}/admin/stats?admin_user_id={self.regular_user_id}")
+            if response.status_code == 403:
+                print("✅ Regular user correctly denied access to admin endpoints")
+                return True
+            else:
+                print(f"❌ Regular user should not have access to admin endpoints: {response.status_code}")
+                return False
+        except Exception as e:
+            print(f"❌ Regular user admin test error: {e}")
+            return False
+    
+    def test_admin_ban_user(self):
+        """Test admin/mod can ban users"""
+        print("\n🔍 Testing Admin Ban User...")
+        
+        if not hasattr(self, 'admin_user_id') or not hasattr(self, 'regular_user_id'):
+            print("❌ Missing admin or regular user ID")
+            return False
+            
+        ban_data = {
+            "user_id": self.regular_user_id,
+            "action": "ban"
+        }
+        
+        try:
+            response = self.session.post(f"{BACKEND_URL}/admin/users/ban?admin_user_id={self.admin_user_id}", json=ban_data)
+            if response.status_code == 200:
+                result = response.json()
+                print(f"✅ User banned successfully: {result['message']}")
+                return True
+            else:
+                print(f"❌ User ban failed: {response.status_code} - {response.text}")
+                return False
+        except Exception as e:
+            print(f"❌ User ban error: {e}")
+            return False
+    
+    def test_mod_can_ban_user(self):
+        """Test that mod can ban users"""
+        print("\n🔍 Testing Mod Can Ban User...")
+        
+        # Create another test user for mod to ban
+        user_data = {
+            "name": "Maria Santos",
+            "email": "maria.santos@teste.com",
+            "password": "senha456"
+        }
+        
+        try:
+            # Create user
+            response = self.session.post(f"{BACKEND_URL}/auth/register", json=user_data)
+            if response.status_code != 200:
+                print(f"❌ Failed to create test user for mod ban test")
+                return False
+            
+            test_user = response.json()
+            test_user_id = test_user["id"]
+            
+            # Mod ban the user
+            ban_data = {
+                "user_id": test_user_id,
+                "action": "ban"
+            }
+            
+            response = self.session.post(f"{BACKEND_URL}/admin/users/ban?admin_user_id={self.mod_user_id}", json=ban_data)
+            if response.status_code == 200:
+                result = response.json()
+                print(f"✅ Mod successfully banned user: {result['message']}")
+                return True
+            else:
+                print(f"❌ Mod ban failed: {response.status_code} - {response.text}")
+                return False
+        except Exception as e:
+            print(f"❌ Mod ban error: {e}")
+            return False
+    
+    def test_cannot_ban_admin(self):
+        """Test that admins cannot be banned"""
+        print("\n🔍 Testing Cannot Ban Admin...")
+        
+        if not hasattr(self, 'admin_user_id'):
+            print("❌ No admin user ID available")
+            return False
+            
+        ban_data = {
+            "user_id": self.admin_user_id,
+            "action": "ban"
+        }
+        
+        try:
+            response = self.session.post(f"{BACKEND_URL}/admin/users/ban?admin_user_id={self.admin_user_id}", json=ban_data)
+            if response.status_code == 403:
+                print("✅ Admin correctly protected from being banned")
+                return True
+            else:
+                print(f"❌ Admin should be protected from banning: {response.status_code}")
+                return False
+        except Exception as e:
+            print(f"❌ Admin ban protection test error: {e}")
+            return False
+    
+    def test_admin_delete_user(self):
+        """Test admin can delete users"""
+        print("\n🔍 Testing Admin Delete User...")
+        
+        # Create a test user to delete
+        user_data = {
+            "name": "Pedro Costa",
+            "email": "pedro.costa@teste.com",
+            "password": "senha789"
+        }
+        
+        try:
+            # Create user
+            response = self.session.post(f"{BACKEND_URL}/auth/register", json=user_data)
+            if response.status_code != 200:
+                print(f"❌ Failed to create test user for deletion test")
+                return False
+            
+            test_user = response.json()
+            test_user_id = test_user["id"]
+            
+            # Delete the user
+            response = self.session.delete(f"{BACKEND_URL}/admin/users/{test_user_id}?admin_user_id={self.admin_user_id}")
+            if response.status_code == 200:
+                result = response.json()
+                print(f"✅ User deleted successfully: {result['message']}")
+                return True
+            else:
+                print(f"❌ User deletion failed: {response.status_code} - {response.text}")
+                return False
+        except Exception as e:
+            print(f"❌ User deletion error: {e}")
+            return False
+    
+    def test_create_giftcard(self):
+        """Test admin can create giftcards"""
+        print("\n🔍 Testing Create Giftcard (Admin Only)...")
+        
+        if not hasattr(self, 'admin_user_id'):
+            print("❌ No admin user ID available")
+            return False
+            
+        giftcard_data = {
+            "amount": 50.0
+        }
+        
+        try:
+            response = self.session.post(f"{BACKEND_URL}/admin/giftcards?admin_user_id={self.admin_user_id}", json=giftcard_data)
+            if response.status_code == 200:
+                giftcard = response.json()
+                self.test_giftcard_code = giftcard["code"]
+                print(f"✅ Giftcard created successfully:")
+                print(f"   Code: {giftcard['code']}")
+                print(f"   Amount: R$ {giftcard['amount']}")
+                print(f"   Status: {giftcard['status']}")
+                return True
+            else:
+                print(f"❌ Giftcard creation failed: {response.status_code} - {response.text}")
+                return False
+        except Exception as e:
+            print(f"❌ Giftcard creation error: {e}")
+            return False
+    
+    def test_mod_cannot_create_giftcard(self):
+        """Test that mod cannot create giftcards"""
+        print("\n🔍 Testing Mod Cannot Create Giftcard...")
+        
+        if not hasattr(self, 'mod_user_id'):
+            print("❌ No mod user ID available")
+            return False
+            
+        giftcard_data = {
+            "amount": 25.0
+        }
+        
+        try:
+            response = self.session.post(f"{BACKEND_URL}/admin/giftcards?admin_user_id={self.mod_user_id}", json=giftcard_data)
+            if response.status_code == 403:
+                print("✅ Mod correctly denied giftcard creation")
+                return True
+            else:
+                print(f"❌ Mod should not be able to create giftcards: {response.status_code}")
+                return False
+        except Exception as e:
+            print(f"❌ Mod giftcard test error: {e}")
+            return False
+    
+    def test_giftcard_minimum_amount(self):
+        """Test giftcard minimum amount validation"""
+        print("\n🔍 Testing Giftcard Minimum Amount Validation...")
+        
+        if not hasattr(self, 'admin_user_id'):
+            print("❌ No admin user ID available")
+            return False
+            
+        giftcard_data = {
+            "amount": 0.50  # Below minimum
+        }
+        
+        try:
+            response = self.session.post(f"{BACKEND_URL}/admin/giftcards?admin_user_id={self.admin_user_id}", json=giftcard_data)
+            if response.status_code == 400:
+                print("✅ Giftcard minimum amount validation working")
+                return True
+            else:
+                print(f"❌ Giftcard should reject amounts below R$ 1.00: {response.status_code}")
+                return False
+        except Exception as e:
+            print(f"❌ Giftcard minimum amount test error: {e}")
+            return False
+    
+    def test_list_giftcards(self):
+        """Test admin can list giftcards"""
+        print("\n🔍 Testing List Giftcards (Admin Only)...")
+        
+        if not hasattr(self, 'admin_user_id'):
+            print("❌ No admin user ID available")
+            return False
+            
+        try:
+            response = self.session.get(f"{BACKEND_URL}/admin/giftcards?admin_user_id={self.admin_user_id}")
+            if response.status_code == 200:
+                giftcards = response.json()
+                print(f"✅ Giftcards list retrieved: {len(giftcards)} giftcards")
+                for gc in giftcards[:3]:  # Show first 3
+                    print(f"   - {gc['code']}: R$ {gc['amount']} ({gc['status']})")
+                return True
+            else:
+                print(f"❌ Giftcards list failed: {response.status_code} - {response.text}")
+                return False
+        except Exception as e:
+            print(f"❌ Giftcards list error: {e}")
+            return False
+    
+    def test_redeem_giftcard(self):
+        """Test user can redeem giftcard"""
+        print("\n🔍 Testing Redeem Giftcard...")
+        
+        if not hasattr(self, 'test_giftcard_code'):
+            print("❌ No giftcard code available for testing")
+            return False
+            
+        # Create a new user to redeem the giftcard
+        user_data = {
+            "name": "Ana Oliveira",
+            "email": "ana.oliveira@teste.com",
+            "password": "senha321"
+        }
+        
+        try:
+            # Create user
+            response = self.session.post(f"{BACKEND_URL}/auth/register", json=user_data)
+            if response.status_code != 200:
+                print(f"❌ Failed to create user for giftcard redemption test")
+                return False
+            
+            user = response.json()
+            user_id = user["id"]
+            
+            # Redeem giftcard
+            redeem_data = {
+                "code": self.test_giftcard_code
+            }
+            
+            response = self.session.post(f"{BACKEND_URL}/giftcards/redeem?user_id={user_id}", json=redeem_data)
+            if response.status_code == 200:
+                result = response.json()
+                print(f"✅ Giftcard redeemed successfully:")
+                print(f"   Message: {result['message']}")
+                print(f"   Amount: R$ {result['amount']}")
+                return True
+            else:
+                print(f"❌ Giftcard redemption failed: {response.status_code} - {response.text}")
+                return False
+        except Exception as e:
+            print(f"❌ Giftcard redemption error: {e}")
+            return False
+    
+    def test_redeem_invalid_giftcard(self):
+        """Test redemption of invalid giftcard"""
+        print("\n🔍 Testing Redeem Invalid Giftcard...")
+        
+        if not hasattr(self, 'regular_user_id'):
+            print("❌ No regular user ID available")
+            return False
+            
+        redeem_data = {
+            "code": "INVALID-CODE-1234-5678"
+        }
+        
+        try:
+            response = self.session.post(f"{BACKEND_URL}/giftcards/redeem?user_id={self.regular_user_id}", json=redeem_data)
+            if response.status_code == 404:
+                print("✅ Invalid giftcard correctly rejected")
+                return True
+            else:
+                print(f"❌ Invalid giftcard should be rejected: {response.status_code}")
+                return False
+        except Exception as e:
+            print(f"❌ Invalid giftcard test error: {e}")
+            return False
+    
+    def test_redeem_already_used_giftcard(self):
+        """Test redemption of already used giftcard"""
+        print("\n🔍 Testing Redeem Already Used Giftcard...")
+        
+        if not hasattr(self, 'test_giftcard_code') or not hasattr(self, 'regular_user_id'):
+            print("❌ Missing giftcard code or user ID")
+            return False
+            
+        redeem_data = {
+            "code": self.test_giftcard_code
+        }
+        
+        try:
+            response = self.session.post(f"{BACKEND_URL}/giftcards/redeem?user_id={self.regular_user_id}", json=redeem_data)
+            if response.status_code == 404:
+                print("✅ Already used giftcard correctly rejected")
+                return True
+            else:
+                print(f"❌ Already used giftcard should be rejected: {response.status_code}")
+                return False
+        except Exception as e:
+            print(f"❌ Already used giftcard test error: {e}")
+            return False
     
     def run_all_tests(self):
         """Run all backend tests"""
