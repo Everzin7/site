@@ -643,21 +643,28 @@ function App() {
   const loadAdminData = async () => {
     if (!user || user.role !== 'admin') return;
 
-    // Simular dados do admin
-    setAdminData({
-      totalUsers: 1247,
-      totalDeposits: {
-        last7days: 15430.50,
-        last14days: 28960.80,
-        last28days: 52840.20
-      },
-      recentUsers: [
-        { id: 1, name: 'João Silva', email: 'joao@teste.com', role: 'user', created_at: '2025-01-06', status: 'active' },
-        { id: 2, name: 'Maria Santos', email: 'maria@teste.com', role: 'user', created_at: '2025-01-05', status: 'active' },
-        { id: 3, name: 'Pedro Costa', email: 'pedro@teste.com', role: 'mod', created_at: '2025-01-04', status: 'active' }
-      ],
-      giftcards: []
-    });
+    try {
+      // Carregar estatísticas do admin
+      const statsResponse = await fetch(`${API_BASE}/api/admin/stats?admin_user_id=${user.id}`);
+      if (statsResponse.ok) {
+        const stats = await statsResponse.json();
+        setAdminData(prev => ({
+          ...prev,
+          totalUsers: stats.totalUsers,
+          totalDeposits: stats.totalDeposits,
+          recentUsers: stats.recentUsers
+        }));
+      }
+
+      // Carregar giftcards
+      await loadAdminGiftcards();
+      
+      // Carregar todos os usuários
+      await loadAllUsers();
+      
+    } catch (error) {
+      console.error('Erro ao carregar dados admin:', error);
+    }
   };
   const showNotification = (message, type) => {
     const notification = document.createElement('div');
