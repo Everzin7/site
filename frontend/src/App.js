@@ -1290,7 +1290,8 @@ function App() {
                       { id: 'wallet', label: 'Carteira', icon: Icons.wallet },
                       { id: 'orders', label: 'Meus Pedidos', icon: Icons.orders },
                       { id: 'builder', label: 'Construtor', icon: Icons.build },
-                      { id: 'simulator', label: 'Simulador', icon: Icons.phone }
+                      { id: 'simulator', label: 'Simulador', icon: Icons.phone },
+                      ...(user.role === 'admin' ? [{ id: 'admin', label: 'Admin', icon: Icons.admin }] : [])
                     ].map((item) => (
                       <button
                         key={item.id}
