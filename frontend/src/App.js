@@ -580,8 +580,63 @@ function App() {
       return;
     }
 
-    // Simular banimento
-    showNotification('✅ Usuário banido com sucesso', 'success');
+    try {
+      const response = await fetch(`${API_BASE}/api/admin/users/ban?admin_user_id=${user.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: userId, action: 'ban' })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        showNotification('✅ ' + result.message, 'success');
+        // Recarregar dados do admin
+        if (user.role === 'admin') {
+          loadAdminData();
+        }
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Erro ao banir usuário');
+      }
+    } catch (error) {
+      showNotification('❌ ' + error.message, 'error');
+    }
+  };
+
+  // Função para carregar giftcards do admin
+  const loadAdminGiftcards = async () => {
+    if (!user || user.role !== 'admin') return;
+
+    try {
+      const response = await fetch(`${API_BASE}/api/admin/giftcards?admin_user_id=${user.id}`);
+      if (response.ok) {
+        const giftcards = await response.json();
+        setAdminData(prev => ({
+          ...prev,
+          giftcards: giftcards
+        }));
+      }
+    } catch (error) {
+      console.error('Erro ao carregar giftcards:', error);
+    }
+  };
+
+  // Função para carregar todos os usuários (admin)
+  const loadAllUsers = async () => {
+    if (!user || user.role !== 'admin') return;
+
+    try {
+      const response = await fetch(`${API_BASE}/api/admin/users?admin_user_id=${user.id}`);
+      if (response.ok) {
+        const users = await response.json();
+        setAdminData(prev => ({
+          ...prev,
+          allUsers: users
+        }));
+      }
+    } catch (error) {
+      console.error('Erro ao carregar usuários:', error);
+    }
   };
 
   // Função para carregar dados admin
