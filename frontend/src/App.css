@@ -180,7 +180,7 @@
   box-shadow: 0 15px 40px rgba(147, 51, 234, 0.6);
 }
 
-/* Inputs futuristas - CORRIGINDO BUG DO CURSOR */
+/* Inputs futuristas - CORRIGINDO BUG DO CURSOR DEFINITIVAMENTE */
 .futuristic-input {
   width: 100%;
   padding: 1rem 1.5rem;
@@ -191,7 +191,10 @@
   font-size: 1rem;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
-  outline: none; /* Importante para evitar conflitos */
+  outline: none !important; /* Forçar outline none */
+  -webkit-appearance: none; /* Remove aparência padrão */
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .futuristic-input::placeholder {
@@ -199,9 +202,24 @@
 }
 
 .futuristic-input:focus {
-  border-color: #9333ea;
-  box-shadow: 0 0 20px rgba(147, 51, 234, 0.4), inset 0 0 20px rgba(147, 51, 234, 0.1);
+  border-color: #9333ea !important;
+  box-shadow: 0 0 20px rgba(147, 51, 234, 0.4), inset 0 0 20px rgba(147, 51, 234, 0.1) !important;
   background: rgba(0, 0, 0, 0.6);
+}
+
+.futuristic-input:active {
+  border-color: #9333ea;
+}
+
+/* Corrigir também para outros tipos de input */
+.futuristic-input[type="text"],
+.futuristic-input[type="email"], 
+.futuristic-input[type="password"],
+.futuristic-input[type="number"] {
+  outline: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
 }
 
 .futuristic-input-sm {
