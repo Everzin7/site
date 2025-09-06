@@ -1149,8 +1149,8 @@ function App() {
           </div>
         )}
 
-        {/* Builder Section - Continuação das seções existentes com novos ícones */}
-        {currentView === 'builder' && user && (
+        {/* Builder Section - Funciona em modo demo também */}
+        {currentView === 'builder' && (
           <div className="max-w-7xl mx-auto px-4 py-8">
             <div className="bg-black/40 backdrop-blur-xl rounded-3xl shadow-2xl border border-purple-500/20 p-8">
               <div className="text-center mb-12">
