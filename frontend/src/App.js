@@ -277,21 +277,28 @@ function App() {
   const handleLogin = async (e) => {
     e.preventDefault();
     
+    console.log('🔐 Tentativa de login iniciada');
+    
     // Validação básica
     if (!loginData.email || !loginData.password) {
+      console.log('❌ Campos vazios');
       showNotification('❌ Preencha email e senha', 'error');
       return;
     }
 
     try {
+      console.log('🌐 Fazendo requisição de login...');
       const response = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(loginData)
       });
       
+      console.log('📡 Response status:', response.status);
+      
       if (response.ok) {
         const userData = await response.json();
+        console.log('✅ Login bem-sucedido:', userData.name);
         setUser(userData);
         localStorage.setItem('whatsapp_bot_user', JSON.stringify(userData));
         setBotConfig(prev => ({ ...prev, user_id: userData.id }));
@@ -306,16 +313,20 @@ function App() {
           loadAdminData();
         }
       } else if (response.status === 401) {
+        console.log('❌ Login inválido - 401');
         showNotification('❌ Email ou senha incorretos', 'error');
       } else {
+        console.log('❌ Erro no servidor:', response.status);
         const errorData = await response.json().catch(() => ({ detail: 'Erro no servidor' }));
         showNotification('❌ Erro no login: ' + (errorData.detail || 'Erro desconhecido'), 'error');
       }
     } catch (error) {
-      console.error('Erro no login:', error);
+      console.error('💥 Erro capturado no login:', error);
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        console.log('🌐 Erro de rede detectado');
         showNotification('❌ Erro de conexão. Verifique sua internet e tente novamente.', 'error');
       } else {
+        console.log('❌ Erro genérico:', error.message);
         showNotification('❌ Erro no login: ' + error.message, 'error');
       }
     }
