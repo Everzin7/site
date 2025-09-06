@@ -1983,11 +1983,11 @@ function App() {
                   </div>
 
                   <button
-                    onClick={saveBotConfig}
+                    onClick={saveBotAndGoToPayment}
                     className="save-btn futuristic-btn-main w-full py-6 text-xl flex items-center justify-center space-x-3"
                   >
                     {Icons.package}
-                    <span>Salvar Configuração</span>
+                    <span>Salvar e Prosseguir para Pagamento</span>
                   </button>
                 </div>
               </div>
