@@ -497,6 +497,11 @@ function App() {
   };
 
   const ensureBotExists = async () => {
+    if (!user) {
+      // Modo demo - bot já existe localmente
+      return;
+    }
+    
     try {
       const response = await fetch(`${API_BASE}/api/bots/${botConfig.id}`);
       if (response.status === 404) {
