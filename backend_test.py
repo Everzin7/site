@@ -19,6 +19,10 @@ class BackendTester:
         self.session = requests.Session()
         self.test_bot_id = None
         self.test_session_id = str(uuid.uuid4())
+        self.admin_user_id = None
+        self.mod_user_id = None
+        self.regular_user_id = None
+        self.test_giftcard_code = None
         
     def test_health_check(self):
         """Test API health endpoint"""
