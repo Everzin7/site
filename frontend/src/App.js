@@ -765,51 +765,94 @@ function App() {
     }
   };
 
-  // Componente de Login
-  const LoginModal = () => (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-black/60 backdrop-blur-xl p-8 rounded-3xl border border-purple-500/30 max-w-md w-full mx-4">
-        <h2 className="text-2xl font-bold text-white mb-6 text-center">Login</h2>
-        <form onSubmit={handleLogin} className="space-y-4">
-          <input
-            type="email"
-            placeholder="Email"
-            value={loginData.email}
-            onChange={(e) => setLoginData(prev => ({ ...prev, email: e.target.value }))}
-            className="futuristic-input"
-            required
-            autoComplete="email"
-          />
-          <input
-            type="password"
-            placeholder="Senha"
-            value={loginData.password}
-            onChange={(e) => setLoginData(prev => ({ ...prev, password: e.target.value }))}
-            className="futuristic-input"
-            required
-            autoComplete="current-password"
-          />
-          <button type="submit" className="futuristic-btn-main w-full">
-            Entrar
-          </button>
-        </form>
-        <div className="text-center mt-4">
+  // Componente de Login - Corrigido para manter foco
+  const LoginModal = () => {
+    const [localLoginData, setLocalLoginData] = useState({ email: '', password: '' });
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+        const response = await fetch(`${API_BASE}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(localLoginData)
+        });
+        
+        if (response.ok) {
+          const userData = await response.json();
+          setUser(userData);
+          localStorage.setItem('whatsapp_bot_user', JSON.stringify(userData));
+          setBotConfig(prev => ({ ...prev, user_id: userData.id }));
+          setShowLogin(false);
+          showNotification('✅ Login realizado com sucesso!', 'success');
+          setCurrentView('dashboard');
+          loadUserBots(userData.id);
+          loadDashboardData(userData.id);
+        } else {
+          throw new Error('Credenciais inválidas');
+        }
+      } catch (error) {
+        showNotification('❌ Erro no login: ' + error.message, 'error');
+      }
+    };
+
+    return (
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="bg-black/60 backdrop-blur-xl p-8 rounded-3xl border border-purple-500/30 max-w-md w-full mx-4">
+          <h2 className="text-2xl font-bold text-white mb-6 text-center">Login</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <input
+                type="email"
+                placeholder="Email"
+                value={localLoginData.email}
+                onChange={(e) => setLocalLoginData(prev => ({ ...prev, email: e.target.value }))}
+                className="futuristic-input"
+                required
+                autoComplete="email"
+                autoFocus={false}
+              />
+            </div>
+            <div>
+              <input
+                type="password"
+                placeholder="Senha"
+                value={localLoginData.password}
+                onChange={(e) => setLocalLoginData(prev => ({ ...prev, password: e.target.value }))}
+                className="futuristic-input"
+                required
+                autoComplete="current-password"
+              />
+            </div>
+            <button type="submit" className="futuristic-btn-main w-full">
+              Entrar
+            </button>
+          </form>
+          <div className="text-center mt-4">
+            <button 
+              onClick={() => { 
+                setShowLogin(false); 
+                setShowRegister(true); 
+                setLocalLoginData({ email: '', password: '' });
+              }}
+              className="text-purple-400 hover:text-purple-300"
+            >
+              Não tem conta? Cadastre-se
+            </button>
+          </div>
           <button 
-            onClick={() => { setShowLogin(false); setShowRegister(true); }}
-            className="text-purple-400 hover:text-purple-300"
+            onClick={() => {
+              setShowLogin(false);
+              setLocalLoginData({ email: '', password: '' });
+            }}
+            className="absolute top-4 right-4 text-gray-400 hover:text-white"
           >
-            Não tem conta? Cadastre-se
+            ✕
           </button>
         </div>
-        <button 
-          onClick={() => setShowLogin(false)}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white"
-        >
-          ✕
-        </button>
       </div>
-    </div>
-  );
+    );
+  };
 
   // Componente de Registro (corrigido)
   const RegisterModal = () => (
