@@ -101,3 +101,122 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Criar um site que permite personalizar bots para WhatsApp com produtos, mensagem de boas-vindas, botões personalizados, catálogo de produtos, simulação em tempo real, integração com IA (Gemini 2.0), upload de imagens, importação CSV e pagamentos (PIX/cartão)."
+
+backend:
+  - task: "API de configuração de bot"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Endpoints implementados: POST/GET/PUT /api/bots, GET /api/health"
+
+  - task: "Sistema de produtos com upload e CSV"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Endpoints: POST /api/bots/{bot_id}/products, POST /api/bots/{bot_id}/products/import-csv"
+
+  - task: "Simulador de chat com IA Gemini 2.0"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Endpoint POST /api/chat/simulate implementado com integração Gemini 2.0 usando emergentintegrations"
+
+  - task: "Histórico de chat"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Endpoint GET /api/chat/{session_id}/history implementado"
+
+frontend:
+  - task: "Home page com efeito parallax"
+    implemented: true
+    working: true
+    file: "App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Home com efeito parallax, gradientes e imagens implementada - visual confirmado via screenshot"
+
+  - task: "Construtor de bot personalizado"
+    implemented: true
+    working: true
+    file: "App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Interface para configurar bot, adicionar botões e produtos - visual confirmado via screenshot"
+
+  - task: "Simulador de chat WhatsApp em tempo real"
+    implemented: true
+    working: true
+    file: "App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Interface do simulador implementada com chat interativo - visual confirmado, precisa testar funcionalidade"
+
+  - task: "Upload de produtos e importação CSV"
+    implemented: true
+    working: true
+    file: "App.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Interface para adicionar produtos manualmente e upload CSV implementada"
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Simulador de chat com IA Gemini 2.0"
+    - "API de configuração de bot"
+    - "Sistema de produtos com upload e CSV"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "Implementação inicial completa. Site funcionando com home parallax, construtor de bot e simulador. Backend com integração Gemini 2.0 configurado. Precisa testar endpoints da API e funcionalidade do chat simulador."
