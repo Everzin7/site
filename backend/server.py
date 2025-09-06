@@ -270,6 +270,186 @@ async def login_user(login_data: UserLogin):
     del user_response['password_hash']
     return user_response
 
+# Endpoints Administrativos
+@app.get("/api/admin/stats")
+async def get_admin_stats(admin_user_id: str):
+    """Buscar estatísticas administrativas (apenas admins)"""
+    await require_admin(admin_user_id)
+    
+    # Contar total de usuários
+    total_users = await db.users.count_documents({})
+    
+    # Calcular depósitos por período (simulado - pode ser implementado com transações reais)
+    # Para demo, usamos valores simulados baseados em estatísticas
+    now = datetime.now(timezone.utc)
+    
+    # Buscar usuários recentes
+    recent_users = await db.users.find({}).sort("created_at", -1).limit(10).to_list(length=None)
+    recent_users_formatted = []
+    
+    for user in recent_users:
+        user = parse_from_mongo(user)
+        recent_users_formatted.append({
+            "id": user["id"],
+            "name": user["name"],
+            "email": user["email"],
+            "role": user["role"],
+            "created_at": user["created_at"].strftime("%Y-%m-%d"),
+            "status": "active"  # Por enquanto todos são ativos
+        })
+    
+    # Estatísticas simuladas de depósitos (podem ser implementadas com transações reais)
+    return AdminStats(
+        totalUsers=total_users,
+        totalDeposits={
+            "last7days": 15430.50,
+            "last14days": 28960.80,
+            "last28days": 52840.20
+        },
+        recentUsers=recent_users_formatted
+    )
+
+@app.get("/api/admin/users")
+async def list_all_users(admin_user_id: str):
+    """Listar todos os usuários (apenas admins)"""
+    await require_admin(admin_user_id)
+    
+    users = await db.users.find({}).to_list(length=None)
+    users_formatted = []
+    
+    for user in users:
+        user = parse_from_mongo(user)
+        users_formatted.append({
+            "id": user["id"],
+            "name": user["name"],
+            "email": user["email"],
+            "role": user["role"],
+            "balance": user.get("balance", 0),
+            "total_earnings": user.get("total_earnings", 0),
+            "referral_earnings": user.get("referral_earnings", 0),
+            "created_at": user["created_at"].strftime("%Y-%m-%d %H:%M:%S"),
+            "status": "active"
+        })
+    
+    return users_formatted
+
+@app.post("/api/admin/users/ban")
+async def ban_user(user_management: UserManagement, admin_user_id: str):
+    """Banir um usuário (admin e mod)"""
+    await require_admin_or_mod(admin_user_id)
+    
+    # Verificar se usuário existe
+    target_user = await db.users.find_one({"id": user_management.user_id})
+    if not target_user:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    
+    # Não permitir banir outros admins
+    if target_user.get("role") == "admin":
+        raise HTTPException(status_code=403, detail="Não é possível banir administradores")
+    
+    # Atualizar status do usuário (adicione campo banned se necessário)
+    await db.users.update_one(
+        {"id": user_management.user_id},
+        {"$set": {"status": "banned", "banned_at": datetime.now(timezone.utc).isoformat()}}
+    )
+    
+    return {"message": f"Usuário {target_user['name']} foi banido com sucesso"}
+
+@app.delete("/api/admin/users/{user_id}")
+async def delete_user(user_id: str, admin_user_id: str):
+    """Deletar um usuário (apenas admins)"""
+    await require_admin(admin_user_id)
+    
+    # Verificar se usuário existe
+    target_user = await db.users.find_one({"id": user_id})
+    if not target_user:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    
+    # Não permitir deletar outros admins
+    if target_user.get("role") == "admin":
+        raise HTTPException(status_code=403, detail="Não é possível deletar administradores")
+    
+    # Deletar usuário e seus dados relacionados
+    await db.users.delete_one({"id": user_id})
+    await db.bots.delete_many({"user_id": user_id})
+    await db.orders.delete_many({"user_id": user_id})
+    await db.chat_messages.delete_many({"bot_id": {"$in": []}})  # Deletar mensagens dos bots do usuário
+    
+    return {"message": f"Usuário {target_user['name']} foi deletado com sucesso"}
+
+# Endpoints de Giftcards
+@app.post("/api/admin/giftcards", response_model=Giftcard)
+async def create_giftcard(giftcard_data: GiftcardCreate, admin_user_id: str):
+    """Criar um novo giftcard (apenas admins)"""
+    admin_user = await require_admin(admin_user_id)
+    
+    if giftcard_data.amount < 1:
+        raise HTTPException(status_code=400, detail="Valor mínimo para giftcard é R$ 1,00")
+    
+    # Criar giftcard
+    giftcard = Giftcard(
+        code=generate_giftcard_code(),
+        amount=giftcard_data.amount,
+        created_by=admin_user["name"]
+    )
+    
+    giftcard_dict = giftcard.dict()
+    giftcard_dict = prepare_for_mongo(giftcard_dict)
+    
+    await db.giftcards.insert_one(giftcard_dict)
+    
+    return giftcard
+
+@app.get("/api/admin/giftcards", response_model=List[Giftcard])
+async def list_giftcards(admin_user_id: str):
+    """Listar todos os giftcards (apenas admins)"""
+    await require_admin(admin_user_id)
+    
+    giftcards = await db.giftcards.find({}).sort("created_at", -1).to_list(length=None)
+    
+    for giftcard in giftcards:
+        giftcard = parse_from_mongo(giftcard)
+    
+    return [Giftcard(**giftcard) for giftcard in giftcards]
+
+@app.post("/api/giftcards/redeem")
+async def redeem_giftcard(redeem_data: GiftcardRedeem, user_id: str):
+    """Resgatar um giftcard"""
+    user = await get_current_user(user_id)
+    
+    # Buscar giftcard
+    giftcard = await db.giftcards.find_one({
+        "code": redeem_data.code.upper(),
+        "status": "active"
+    })
+    
+    if not giftcard:
+        raise HTTPException(status_code=404, detail="Giftcard inválido ou já utilizado")
+    
+    # Marcar giftcard como resgatado
+    await db.giftcards.update_one(
+        {"id": giftcard["id"]},
+        {
+            "$set": {
+                "status": "redeemed",
+                "redeemed_by": user["name"],
+                "redeemed_at": datetime.now(timezone.utc).isoformat()
+            }
+        }
+    )
+    
+    # Adicionar saldo ao usuário
+    await db.users.update_one(
+        {"id": user_id},
+        {"$inc": {"balance": giftcard["amount"]}}
+    )
+    
+    return {
+        "message": f"Giftcard resgatado com sucesso! R$ {giftcard['amount']:.2f} adicionados ao saldo",
+        "amount": giftcard["amount"],
+        "code": giftcard["code"]
+    }
+
 # Endpoints do Dashboard
 @app.get("/api/dashboard/{user_id}", response_model=DashboardStats)
 async def get_dashboard_stats(user_id: str):
