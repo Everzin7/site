@@ -165,12 +165,18 @@ def prepare_for_mongo(data):
     return data
 
 def parse_from_mongo(item):
+    # Remove MongoDB's _id field if present
+    if '_id' in item:
+        del item['_id']
+    
     if isinstance(item.get('created_at'), str):
         item['created_at'] = datetime.fromisoformat(item['created_at'])
     if isinstance(item.get('updated_at'), str):
         item['updated_at'] = datetime.fromisoformat(item['updated_at'])
     if isinstance(item.get('redeemed_at'), str):
         item['redeemed_at'] = datetime.fromisoformat(item['redeemed_at'])
+    if isinstance(item.get('banned_at'), str):
+        item['banned_at'] = datetime.fromisoformat(item['banned_at'])
     return item
 
 # Funções de autorização
