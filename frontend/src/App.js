@@ -645,27 +645,37 @@ function App() {
   const loadAdminData = async () => {
     if (!user || user.role !== 'admin') return;
 
+    console.log('🔍 Carregando dados admin para usuário:', user.id);
+
     try {
       // Carregar estatísticas do admin
+      console.log('📊 Carregando estatísticas...');
       const statsResponse = await fetch(`${API_BASE}/api/admin/stats?admin_user_id=${user.id}`);
+      console.log('📊 Response status:', statsResponse.status);
+      
       if (statsResponse.ok) {
         const stats = await statsResponse.json();
+        console.log('📊 Stats carregadas:', stats);
         setAdminData(prev => ({
           ...prev,
           totalUsers: stats.totalUsers,
           totalDeposits: stats.totalDeposits,
           recentUsers: stats.recentUsers
         }));
+      } else {
+        console.error('❌ Erro ao carregar stats:', await statsResponse.text());
       }
 
       // Carregar giftcards
+      console.log('🎁 Carregando giftcards...');
       await loadAdminGiftcards();
       
       // Carregar todos os usuários
+      console.log('👥 Carregando usuários...');
       await loadAllUsers();
       
     } catch (error) {
-      console.error('Erro ao carregar dados admin:', error);
+      console.error('❌ Erro ao carregar dados admin:', error);
     }
   };
   const showNotification = (message, type) => {
