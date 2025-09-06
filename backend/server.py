@@ -345,12 +345,12 @@ async def list_all_users(admin_user_id: str):
             "id": user["id"],
             "name": user["name"],
             "email": user["email"],
-            "role": user["role"],
+            "role": user.get("role", "user"),  # Default to 'user' if no role
             "balance": user.get("balance", 0),
             "total_earnings": user.get("total_earnings", 0),
             "referral_earnings": user.get("referral_earnings", 0),
-            "created_at": user["created_at"].strftime("%Y-%m-%d %H:%M:%S"),
-            "status": "active"
+            "created_at": user.get("created_at", datetime.now(timezone.utc)).strftime("%Y-%m-%d %H:%M:%S") if isinstance(user.get("created_at"), datetime) else str(user.get("created_at", "N/A"))[:19],
+            "status": user.get("status", "active")  # Check if user is banned
         })
     
     return users_formatted
