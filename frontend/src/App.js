@@ -223,7 +223,7 @@ function App() {
     try {
       const response = await fetch(`${API_BASE}/api/auth/register`, {
         method: 'POST',
-        Headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(registerData)
       });
       
@@ -237,7 +237,8 @@ function App() {
         setCurrentView('dashboard');
         loadDashboardData(userData.id);
       } else {
-        throw new Error('Erro ao criar conta');
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Erro ao criar conta');
       }
     } catch (error) {
       showNotification('❌ Erro no registro: ' + error.message, 'error');
