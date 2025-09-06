@@ -1502,11 +1502,36 @@ function App() {
                   <p className="text-4xl font-bold text-white mb-4">R$ {walletData.balance.toFixed(2)}</p>
                   <button
                     onClick={() => setCurrentView('add-balance')}
-                    className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 rounded-xl font-bold hover:from-green-600 hover:to-emerald-700 transition-all flex items-center justify-center space-x-2"
+                    className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 rounded-xl font-bold hover:from-green-600 hover:to-emerald-700 transition-all flex items-center justify-center space-x-2 mb-3"
                   >
                     {Icons.add}
                     <span>Adicionar Saldo</span>
                   </button>
+                  
+                  {/* Botão para resgatar giftcard */}
+                  <div className="bg-black/30 p-4 rounded-xl border border-green-500/20">
+                    <p className="text-green-400 text-sm mb-3 flex items-center space-x-2">
+                      {Icons.gift}
+                      <span>Resgatar Giftcard</span>
+                    </p>
+                    <div className="flex space-x-2">
+                      <input
+                        type="text"
+                        placeholder="XXXX-XXXX-XXXX-XXXX"
+                        value={redeemCode}
+                        onChange={(e) => setRedeemCode(e.target.value.toUpperCase())}
+                        className="flex-1 px-3 py-2 bg-black/50 border border-green-500/30 rounded-lg text-white text-sm font-mono"
+                        maxLength="19"
+                      />
+                      <button
+                        onClick={redeemGiftcard}
+                        disabled={!redeemCode.trim()}
+                        className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:bg-gray-500 disabled:cursor-not-allowed transition-all text-sm"
+                      >
+                        Resgatar
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
