@@ -1,34 +1,285 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+/* Animações e efeitos personalizados */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-.App-link {
-    color: #61dafb;
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -10px, 0);
+  }
+  70% {
+    transform: translate3d(0, -5px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+/* Efeitos de hover para botões */
+.btn-hover-glow {
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.btn-hover-glow:hover {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-hover-glow:active {
+  transform: translateY(0);
+}
+
+/* Efeito parallax personalizado */
+.parallax-bg {
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Gradientes animados */
+.gradient-animate {
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Efeitos de chat */
+.chat-message {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.chat-message.user {
+  animation: slideInRight 0.5s ease-out;
+}
+
+.chat-message.bot {
+  animation: slideInLeft 0.5s ease-out;
+}
+
+/* Loader personalizado */
+.typing-indicator {
+  display: inline-flex;
+  align-items: center;
+}
+
+.typing-indicator span {
+  height: 8px;
+  width: 8px;
+  float: left;
+  margin: 0 1px;
+  background-color: #9E9EA1;
+  display: block;
+  border-radius: 50%;
+  opacity: 0.4;
+}
+
+.typing-indicator span:nth-of-type(1) { animation: bounce 1.4s ease-in-out infinite both; }
+.typing-indicator span:nth-of-type(2) { animation: bounce 1.4s ease-in-out 0.2s infinite both; }
+.typing-indicator span:nth-of-type(3) { animation: bounce 1.4s ease-in-out 0.4s infinite both; }
+
+/* Scrollbar personalizada */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Efeitos de card hover */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+/* Backdrop blur para elementos */
+.backdrop-blur-custom {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Glow effect para inputs focados */
+.input-glow {
+  transition: all 0.3s ease;
+}
+
+.input-glow:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+  border-color: #3b82f6;
+}
+
+/* Loading skeleton */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Texto com efeito de máquina de escrever */
+.typewriter {
+  overflow: hidden;
+  border-right: .15em solid orange;
+  white-space: nowrap;
+  margin: 0 auto;
+  letter-spacing: .15em;
+  animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: orange; }
+}
+
+/* Efeito de ondas */
+.wave {
+  animation-name: wave-animation;
+  animation-duration: 2.5s;
+  animation-iteration-count: infinite;
+  transform-origin: 70% 70%;
+  display: inline-block;
+}
+
+@keyframes wave-animation {
+  0% { transform: rotate(0deg); }
+  10% { transform: rotate(14deg); }
+  20% { transform: rotate(-8deg); }
+  30% { transform: rotate(14deg); }
+  40% { transform: rotate(-4deg); }
+  50% { transform: rotate(10deg); }
+  60% { transform: rotate(0deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* Responsividade para mobile */
+@media (max-width: 768px) {
+  .parallax-bg {
+    background-attachment: scroll;
+  }
+  
+  .card-hover:hover {
+    transform: none;
+  }
+  
+  .btn-hover-glow:hover {
+    transform: none;
+  }
+}
+
+/* Efeitos especiais para botões do WhatsApp */
+.whatsapp-green {
+  background-color: #25D366;
+}
+
+.whatsapp-green:hover {
+  background-color: #20BA5A;
+}
+
+.whatsapp-bubble {
+  position: relative;
+  background-color: #DCF8C6;
+  border-radius: 18px;
+  padding: 10px 15px;
+  margin: 5px 0;
+}
+
+.whatsapp-bubble:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -10px;
+  width: 0;
+  height: 0;
+  border: 10px solid transparent;
+  border-left-color: #DCF8C6;
+  border-right: 0;
+  border-top: 0;
+  margin-top: 10px;
+}
+
+.whatsapp-bubble.received {
+  background-color: #FFFFFF;
+  margin-left: 0;
+  margin-right: 50px;
+}
+
+.whatsapp-bubble.received:before {
+  left: -10px;
+  right: auto;
+  border-left: 0;
+  border-right-color: #FFFFFF;
 }
