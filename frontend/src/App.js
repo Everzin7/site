@@ -291,6 +291,11 @@ function App() {
         setCurrentView('dashboard');
         loadUserBots(userData.id);
         loadDashboardData(userData.id);
+        
+        // Carregar dados de admin se for admin
+        if (userData.role === 'admin') {
+          loadAdminData();
+        }
       } else {
         throw new Error('Credenciais inválidas');
       }
