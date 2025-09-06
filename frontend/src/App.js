@@ -206,6 +206,9 @@ function App() {
   const sendSimulatorMessage = async () => {
     if (!simulatorMessage.trim()) return;
     
+    // Garantir que o bot existe antes de simular
+    await ensureBotExists();
+    
     const newUserMessage = {
       id: Date.now(),
       message: simulatorMessage,
@@ -218,6 +221,7 @@ function App() {
       messages: [...prev.messages, newUserMessage]
     }));
     
+    const currentMessage = simulatorMessage;
     setSimulatorMessage('');
     setIsTyping(true);
     
@@ -228,9 +232,13 @@ function App() {
         body: JSON.stringify({
           bot_id: botConfig.id,
           session_id: chatSession.session_id || 'demo-session-' + Date.now(),
-          message: simulatorMessage
+          message: currentMessage
         })
       });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+      }
       
       const data = await response.json();
       
@@ -256,6 +264,36 @@ function App() {
     } catch (error) {
       console.error('Erro na simulação:', error);
       setIsTyping(false);
+      
+      // Mostrar mensagem de erro para o usuário
+      const errorMessage = {
+        id: Date.now() + 1,
+        message: "⚠️ Erro ao processar mensagem. Tente salvar a configuração do bot primeiro.",
+        sender: 'bot',
+        timestamp: new Date().toISOString()
+      };
+      
+      setChatSession(prev => ({
+        ...prev,
+        messages: [...prev.messages, errorMessage]
+      }));
+      
+      showNotification('❌ Erro na simulação. Salve a configuração primeiro.', 'error');
+    }
+  };
+
+  // Garantir que o bot existe no backend
+  const ensureBotExists = async () => {
+    try {
+      // Tentar buscar o bot
+      const response = await fetch(`${API_BASE}/api/bots/${botConfig.id}`);
+      if (response.status === 404) {
+        // Bot não existe, criar automaticamente
+        await saveBotConfig();
+      }
+    } catch (error) {
+      // Se houver erro, tentar criar o bot automaticamente
+      await saveBotConfig();
     }
   };
 
