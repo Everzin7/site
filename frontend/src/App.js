@@ -330,8 +330,9 @@ function App() {
 
   const saveBotConfig = async () => {
     if (!user) {
-      showNotification('❌ Faça login para salvar seu bot', 'error');
-      return false;
+      // Modo demo - apenas simular salvamento
+      showNotification('✅ Bot salvo em modo demo! Faça login para salvar permanentemente.', 'info');
+      return true;
     }
 
     try {
@@ -348,6 +349,9 @@ function App() {
         setCurrentView('payment');
         loadUserBots(user.id);
         return true;
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Erro ao salvar bot');
       }
     } catch (error) {
       showNotification('❌ Erro ao salvar bot', 'error');
