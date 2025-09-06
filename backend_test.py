@@ -12,7 +12,7 @@ import os
 from datetime import datetime
 
 # Get backend URL from environment
-BACKEND_URL = "https://botcreator.preview.emergentagent.com/api"
+BACKEND_URL = "https://botcraft-9.preview.emergentagent.com/api"
 
 class BackendTester:
     def __init__(self):
