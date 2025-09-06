@@ -869,6 +869,7 @@ function App() {
                   <div className="flex space-x-2">
                     {[
                       { id: 'dashboard', label: 'Dashboard', icon: Icons.dashboard },
+                      { id: 'wallet', label: 'Carteira', icon: Icons.wallet },
                       { id: 'orders', label: 'Meus Pedidos', icon: Icons.orders },
                       { id: 'builder', label: 'Construtor', icon: Icons.build },
                       { id: 'simulator', label: 'Simulador', icon: Icons.phone }
