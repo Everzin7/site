@@ -471,6 +471,131 @@ function App() {
     setPixPaymentData(null);
     showNotification('❌ Pagamento cancelado', 'info');
   };
+
+  // Função para gerar giftcard (apenas admins)
+  const generateGiftcard = async () => {
+    if (!user || user.role !== 'admin') {
+      showNotification('❌ Apenas administradores podem criar giftcards', 'error');
+      return;
+    }
+
+    const amount = parseFloat(giftcardData.amount);
+    if (!amount || amount < 1) {
+      showNotification('❌ Valor mínimo para giftcard é R$ 1,00', 'error');
+      return;
+    }
+
+    // Gerar código de 16 dígitos (letras e números)
+    const generateCode = () => {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let result = '';
+      for (let i = 0; i < 16; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result.match(/.{1,4}/g).join('-'); // Formato XXXX-XXXX-XXXX-XXXX
+    };
+
+    const newGiftcard = {
+      id: Date.now(),
+      code: generateCode(),
+      amount: amount,
+      status: 'active',
+      created_by: user.name,
+      created_at: new Date().toISOString(),
+      redeemed_by: null,
+      redeemed_at: null
+    };
+
+    // Simular salvamento no backend
+    setAdminData(prev => ({
+      ...prev,
+      giftcards: [newGiftcard, ...prev.giftcards]
+    }));
+
+    setGiftcardData({ code: '', amount: '', created_by: '' });
+    showNotification(`✅ Giftcard criado: ${newGiftcard.code}`, 'success');
+  };
+
+  // Função para resgatar giftcard
+  const redeemGiftcard = async () => {
+    if (!redeemCode.trim()) {
+      showNotification('❌ Digite o código do giftcard', 'error');
+      return;
+    }
+
+    // Simular verificação no backend
+    const giftcard = adminData.giftcards.find(gc => 
+      gc.code === redeemCode.toUpperCase() && gc.status === 'active'
+    );
+
+    if (!giftcard) {
+      showNotification('❌ Giftcard inválido ou já utilizado', 'error');
+      return;
+    }
+
+    // Resgatar giftcard
+    setWalletData(prev => ({
+      ...prev,
+      balance: prev.balance + giftcard.amount,
+      transactions: [
+        {
+          id: Date.now(),
+          type: 'giftcard',
+          amount: giftcard.amount,
+          method: 'giftcard',
+          status: 'completed',
+          date: new Date().toISOString(),
+          description: `Giftcard resgatado: ${giftcard.code}`
+        },
+        ...prev.transactions
+      ]
+    }));
+
+    // Marcar como usado
+    setAdminData(prev => ({
+      ...prev,
+      giftcards: prev.giftcards.map(gc => 
+        gc.code === giftcard.code 
+          ? { ...gc, status: 'redeemed', redeemed_by: user?.name || 'Demo User', redeemed_at: new Date().toISOString() }
+          : gc
+      )
+    }));
+
+    setRedeemCode('');
+    showNotification(`✅ Giftcard resgatado! R$ ${giftcard.amount.toFixed(2)} adicionados ao saldo`, 'success');
+  };
+
+  // Função para banir usuário (admin/mod)
+  const banUser = async (userId) => {
+    if (!user || (user.role !== 'admin' && user.role !== 'mod')) {
+      showNotification('❌ Sem permissão para banir usuários', 'error');
+      return;
+    }
+
+    // Simular banimento
+    showNotification('✅ Usuário banido com sucesso', 'success');
+  };
+
+  // Função para carregar dados admin
+  const loadAdminData = async () => {
+    if (!user || user.role !== 'admin') return;
+
+    // Simular dados do admin
+    setAdminData({
+      totalUsers: 1247,
+      totalDeposits: {
+        last7days: 15430.50,
+        last14days: 28960.80,
+        last28days: 52840.20
+      },
+      recentUsers: [
+        { id: 1, name: 'João Silva', email: 'joao@teste.com', role: 'user', created_at: '2025-01-06', status: 'active' },
+        { id: 2, name: 'Maria Santos', email: 'maria@teste.com', role: 'user', created_at: '2025-01-05', status: 'active' },
+        { id: 3, name: 'Pedro Costa', email: 'pedro@teste.com', role: 'mod', created_at: '2025-01-04', status: 'active' }
+      ],
+      giftcards: []
+    });
+  };
   const showNotification = (message, type) => {
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
