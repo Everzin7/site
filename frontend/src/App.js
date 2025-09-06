@@ -2212,6 +2212,7 @@ function App() {
       {/* Modais */}
       {showLogin && <LoginModal />}
       {showRegister && <RegisterModal />}
+      {showPixPayment && <PixPaymentModal />}
     </div>
   );
 }
