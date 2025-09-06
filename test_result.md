@@ -166,28 +166,34 @@ backend:
         comment: "✅ TESTADO: Histórico de chat funcionando. Recuperou 4 mensagens da sessão de teste com timestamps corretos e identificação de sender (user/bot)."
 
   - task: "Sistema de roles Admin/Mod"
-    implemented: false
-    working: false
+    implemented: true
+    working: true
     file: "server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: false
         agent: "main"
         comment: "Iniciando implementação. Preciso adicionar: authorization middleware, endpoints admin (user management, ban/delete users, statistics), criar usuários admin/mod padrão."
+      - working: true
+        agent: "main"
+        comment: "✅ IMPLEMENTADO: Authorization middleware, usuários padrão (admin: adm@ever.com/everto1n, mod: mod@ever.com/mod123), endpoints admin (/api/admin/stats, /api/admin/users, /api/admin/users/ban, /api/admin/users/{user_id}), permissões funcionando (mod pode banir, admin pode tudo)."
 
   - task: "Sistema de giftcards"
-    implemented: false
-    working: false
+    implemented: true
+    working: true
     file: "server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: false
         agent: "main"
         comment: "Preciso implementar: endpoints para criar giftcards (admin only), resgatar giftcards (users), validação formato 16 dígitos alfanuméricos maiúsculos."
+      - working: true
+        agent: "main"
+        comment: "✅ IMPLEMENTADO: Endpoints /api/admin/giftcards (POST/GET para admins), /api/giftcards/redeem (POST para users), formato 16 dígitos alfanuméricos maiúsculos (XXXX-XXXX-XXXX-XXXX), validação funcional testada."
 
 frontend:
   - task: "Home page com efeito parallax"
