@@ -627,17 +627,23 @@ function App() {
   const loadAllUsers = async () => {
     if (!user || user.role !== 'admin') return;
 
+    console.log('👥 Fazendo request para carregar usuários...');
     try {
       const response = await fetch(`${API_BASE}/api/admin/users?admin_user_id=${user.id}`);
+      console.log('👥 Response status:', response.status);
+      
       if (response.ok) {
         const users = await response.json();
+        console.log('👥 Usuários carregados:', users.length, users);
         setAdminData(prev => ({
           ...prev,
           allUsers: users
         }));
+      } else {
+        console.error('❌ Erro ao carregar usuários:', await response.text());
       }
     } catch (error) {
-      console.error('Erro ao carregar usuários:', error);
+      console.error('❌ Erro na requisição de usuários:', error);
     }
   };
 
