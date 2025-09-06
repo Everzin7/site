@@ -105,15 +105,21 @@ function App() {
       if (response.ok) {
         // Animação de sucesso
         const btn = document.querySelector('.save-btn');
-        btn.classList.add('success-pulse');
-        setTimeout(() => btn.classList.remove('success-pulse'), 2000);
+        if (btn) {
+          btn.classList.add('success-pulse');
+          setTimeout(() => btn.classList.remove('success-pulse'), 2000);
+        }
         
         // Mostrar notificação
         showNotification('✅ Configuração salva com sucesso!', 'success');
+        return true;
+      } else {
+        throw new Error(`Erro ${response.status}: ${await response.text()}`);
       }
     } catch (error) {
       console.error('Erro ao salvar:', error);
       showNotification('❌ Erro ao salvar configuração', 'error');
+      return false;
     }
   };
 
