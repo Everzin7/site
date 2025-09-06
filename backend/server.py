@@ -112,6 +112,31 @@ class DashboardStats(BaseModel):
     referralEarnings: float
     monthlyStats: List[Dict[str, Any]]
 
+class Giftcard(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    code: str
+    amount: float
+    status: str = "active"  # active, redeemed
+    created_by: str
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    redeemed_by: Optional[str] = None
+    redeemed_at: Optional[datetime] = None
+
+class GiftcardCreate(BaseModel):
+    amount: float
+
+class GiftcardRedeem(BaseModel):
+    code: str
+
+class AdminStats(BaseModel):
+    totalUsers: int
+    totalDeposits: Dict[str, float]
+    recentUsers: List[Dict[str, Any]]
+
+class UserManagement(BaseModel):
+    user_id: str
+    action: str  # ban, delete, promote, demote
+
 # Funções auxiliares
 def hash_password(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
