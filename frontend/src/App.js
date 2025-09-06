@@ -1692,13 +1692,24 @@ function App() {
               </>
             )}
 
-            {/* Users Tab */}
+                {/* Users Tab */}
             {adminActiveTab === 'users' && (
               <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/20">
-                <h3 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
-                  {Icons.user}
-                  <span>Todos os Usuários</span>
-                </h3>
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-bold text-white flex items-center space-x-2">
+                    {Icons.user}
+                    <span>Todos os Usuários</span>
+                  </h3>
+                  <button
+                    onClick={() => {
+                      console.log('🔄 Carregando usuários manualmente...');
+                      loadAllUsers();
+                    }}
+                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all"
+                  >
+                    Recarregar
+                  </button>
+                </div>
 
                 <div className="overflow-x-auto">
                   <table className="w-full">
@@ -1758,7 +1769,7 @@ function App() {
                   
                   {adminData.allUsers.length === 0 && (
                     <div className="text-center py-8 text-gray-400">
-                      Carregando usuários...
+                      Carregando usuários... Clique em "Recarregar" se não aparecer nada.
                     </div>
                   )}
                 </div>
