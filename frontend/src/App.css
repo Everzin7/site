@@ -1,14 +1,26 @@
-/* Animações e efeitos personalizados */
+/* Tema Dark Futurista */
+.bg-dark-theme {
+  background: linear-gradient(135deg, #0c0c0c 0%, #1a0533 25%, #2d1b69 50%, #1a0533 75%, #0c0c0c 100%);
+  min-height: 100vh;
+}
+
+/* Animações avançadas */
+@keyframes gradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-10px) rotate(2deg); }
+  50% { transform: translateY(-5px) rotate(-1deg); }
+  75% { transform: translateY(-15px) rotate(1deg); }
 }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(50px);
   }
   to {
     opacity: 1;
@@ -19,7 +31,7 @@
 @keyframes slideInLeft {
   from {
     opacity: 0;
-    transform: translateX(-30px);
+    transform: translateX(-50px);
   }
   to {
     opacity: 1;
@@ -30,7 +42,7 @@
 @keyframes slideInRight {
   from {
     opacity: 0;
-    transform: translateX(30px);
+    transform: translateX(50px);
   }
   to {
     opacity: 1;
@@ -39,8 +51,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.8; }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
 }
 
 @keyframes bounce {
@@ -58,67 +70,358 @@
   }
 }
 
-/* Efeitos de hover para botões */
-.btn-hover-glow {
-  transition: all 0.3s ease;
-  position: relative;
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(147, 51, 234, 0.5); }
+  50% { box-shadow: 0 0 40px rgba(147, 51, 234, 0.8), 0 0 60px rgba(6, 182, 212, 0.3); }
 }
 
-.btn-hover-glow:hover {
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
-  transform: translateY(-2px);
+/* Animação do gradiente de texto */
+.animate-gradient {
+  background-size: 400% 400%;
+  animation: gradient 3s ease infinite;
 }
 
-.btn-hover-glow:active {
+/* Scroll animations */
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-animate.animate-in {
+  opacity: 1;
   transform: translateY(0);
 }
 
-/* Efeito parallax personalizado */
-.parallax-bg {
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+/* Ícones flutuantes */
+.floating-icon {
+  position: absolute;
+  animation: float 6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 10;
 }
 
-/* Gradientes animados */
-.gradient-animate {
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
+.floating-icon:nth-child(2) { animation-delay: -1s; }
+.floating-icon:nth-child(3) { animation-delay: -2s; }
+.floating-icon:nth-child(4) { animation-delay: -3s; }
+.floating-icon:nth-child(5) { animation-delay: -4s; }
+.floating-icon:nth-child(6) { animation-delay: -5s; }
+
+/* Cards de features */
+.feature-card {
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+  border: 1px solid rgba(147, 51, 234, 0.3);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s;
 }
 
-/* Efeitos de chat */
-.chat-message {
-  animation: fadeInUp 0.5s ease-out;
+.feature-card:hover::before {
+  left: 100%;
 }
 
-.chat-message.user {
+.feature-card:hover {
+  transform: translateY(-10px);
+  border-color: rgba(147, 51, 234, 0.6);
+  box-shadow: 0 25px 50px rgba(147, 51, 234, 0.3);
+}
+
+.feature-icon-container {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #9333ea, #06b6d4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 10px 30px rgba(147, 51, 234, 0.4);
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-icon-container {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 15px 40px rgba(147, 51, 234, 0.6);
+}
+
+/* Inputs futuristas */
+.futuristic-input {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(147, 51, 234, 0.3);
+  border-radius: 1rem;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.futuristic-input::placeholder {
+  color: rgba(147, 51, 234, 0.6);
+}
+
+.futuristic-input:focus {
+  outline: none;
+  border-color: #9333ea;
+  box-shadow: 0 0 20px rgba(147, 51, 234, 0.4), inset 0 0 20px rgba(147, 51, 234, 0.1);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.futuristic-input-sm {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(147, 51, 234, 0.3);
+  border-radius: 0.75rem;
+  color: white;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.futuristic-input-sm::placeholder {
+  color: rgba(147, 51, 234, 0.6);
+}
+
+.futuristic-input-sm:focus {
+  outline: none;
+  border-color: #9333ea;
+  box-shadow: 0 0 15px rgba(147, 51, 234, 0.4);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.futuristic-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(147, 51, 234, 0.3);
+  border-radius: 0.75rem;
+  color: white;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.futuristic-select:focus {
+  outline: none;
+  border-color: #9333ea;
+  box-shadow: 0 0 15px rgba(147, 51, 234, 0.4);
+}
+
+.futuristic-select option {
+  background: #1a0533;
+  color: white;
+}
+
+.futuristic-file-input {
+  width: 100%;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px dashed rgba(147, 51, 234, 0.3);
+  border-radius: 1rem;
+  color: white;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.futuristic-file-input:hover {
+  border-color: #9333ea;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.futuristic-checkbox {
+  width: 1.25rem;
+  height: 1.25rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(147, 51, 234, 0.3);
+  border-radius: 0.25rem;
+  appearance: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.futuristic-checkbox:checked {
+  background: linear-gradient(135deg, #9333ea, #06b6d4);
+  border-color: #9333ea;
+}
+
+.futuristic-checkbox:checked::after {
+  content: '✓';
+  display: block;
+  color: white;
+  font-size: 0.8rem;
+  text-align: center;
+  line-height: 1;
+}
+
+/* Botões futuristas */
+.futuristic-btn-main {
+  background: linear-gradient(135deg, #9333ea, #06b6d4);
+  color: white;
+  border: none;
+  border-radius: 1rem;
+  padding: 1rem 2rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(147, 51, 234, 0.4);
+}
+
+.futuristic-btn-main::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.futuristic-btn-main:hover::before {
+  left: 100%;
+}
+
+.futuristic-btn-main:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(147, 51, 234, 0.6);
+}
+
+.futuristic-btn-green {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(5, 150, 105, 0.4);
+}
+
+.futuristic-btn-green:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(5, 150, 105, 0.6);
+  background: linear-gradient(135deg, #047857, #059669);
+}
+
+.futuristic-btn-blue {
+  background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(29, 78, 216, 0.4);
+}
+
+.futuristic-btn-blue:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(29, 78, 216, 0.6);
+  background: linear-gradient(135deg, #1e40af, #2563eb);
+}
+
+/* Animação de sucesso para o botão salvar */
+.success-pulse {
+  animation: glow 1s ease-in-out;
+}
+
+/* Notificações */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  color: white;
+  font-weight: 600;
+  z-index: 1000;
+  transform: translateX(400px);
+  transition: transform 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.notification.show {
+  transform: translateX(0);
+}
+
+.notification.success {
+  background: linear-gradient(135deg, #059669, #10b981);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.notification.error {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.notification.info {
+  background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+/* Scrollbar personalizada */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #9333ea, #06b6d4);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #7c3aed, #0891b2);
+}
+
+/* Mensagens do chat */
+.message-user {
   animation: slideInRight 0.5s ease-out;
 }
 
-.chat-message.bot {
+.message-bot {
   animation: slideInLeft 0.5s ease-out;
 }
 
-/* Loader personalizado */
+/* Typing indicator melhorado */
 .typing-indicator {
   display: inline-flex;
   align-items: center;
+  padding: 0.5rem 0;
 }
 
 .typing-indicator span {
   height: 8px;
   width: 8px;
   float: left;
-  margin: 0 1px;
-  background-color: #9E9EA1;
+  margin: 0 2px;
+  background: linear-gradient(135deg, #9333ea, #06b6d4);
   display: block;
   border-radius: 50%;
   opacity: 0.4;
@@ -128,54 +431,42 @@
 .typing-indicator span:nth-of-type(2) { animation: bounce 1.4s ease-in-out 0.2s infinite both; }
 .typing-indicator span:nth-of-type(3) { animation: bounce 1.4s ease-in-out 0.4s infinite both; }
 
-/* Scrollbar personalizada */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 10px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
-
-/* Efeitos de card hover */
-.card-hover {
-  transition: all 0.3s ease;
-}
-
-.card-hover:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-}
-
-/* Backdrop blur para elementos */
-.backdrop-blur-custom {
+/* Efeitos especiais */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Glow effect para inputs focados */
-.input-glow {
-  transition: all 0.3s ease;
+.neon-border {
+  border: 2px solid transparent;
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.1), rgba(6, 182, 212, 0.1)) padding-box,
+              linear-gradient(135deg, #9333ea, #06b6d4) border-box;
 }
 
-.input-glow:focus {
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-  border-color: #3b82f6;
+/* Responsividade aprimorada */
+@media (max-width: 768px) {
+  .floating-icon {
+    display: none;
+  }
+  
+  .feature-card:hover {
+    transform: none;
+  }
+  
+  .futuristic-btn-main:hover {
+    transform: none;
+  }
+  
+  .scroll-animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Loading skeleton */
+/* Animações de carregamento */
 .skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, rgba(147, 51, 234, 0.1) 25%, rgba(6, 182, 212, 0.1) 50%, rgba(147, 51, 234, 0.1) 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
 }
@@ -185,101 +476,71 @@
   100% { background-position: -200% 0; }
 }
 
-/* Texto com efeito de máquina de escrever */
-.typewriter {
-  overflow: hidden;
-  border-right: .15em solid orange;
-  white-space: nowrap;
-  margin: 0 auto;
-  letter-spacing: .15em;
-  animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+/* Efeitos avançados de hover */
+.hover-scale {
+  transition: transform 0.3s ease;
 }
 
-@keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
+.hover-scale:hover {
+  transform: scale(1.05);
 }
 
-@keyframes blink-caret {
-  from, to { border-color: transparent }
-  50% { border-color: orange; }
+.hover-glow {
+  transition: all 0.3s ease;
 }
 
-/* Efeito de ondas */
-.wave {
-  animation-name: wave-animation;
-  animation-duration: 2.5s;
-  animation-iteration-count: infinite;
-  transform-origin: 70% 70%;
-  display: inline-block;
+.hover-glow:hover {
+  box-shadow: 0 0 30px rgba(147, 51, 234, 0.6);
 }
 
-@keyframes wave-animation {
-  0% { transform: rotate(0deg); }
-  10% { transform: rotate(14deg); }
-  20% { transform: rotate(-8deg); }
-  30% { transform: rotate(14deg); }
-  40% { transform: rotate(-4deg); }
-  50% { transform: rotate(10deg); }
-  60% { transform: rotate(0deg); }
-  100% { transform: rotate(0deg); }
+/* Animação de texto futurista */
+.cyber-text {
+  background: linear-gradient(45deg, #9333ea, #06b6d4, #9333ea);
+  background-size: 200% 200%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient 3s ease infinite;
 }
 
-/* Responsividade para mobile */
-@media (max-width: 768px) {
-  .parallax-bg {
-    background-attachment: scroll;
-  }
-  
-  .card-hover:hover {
-    transform: none;
-  }
-  
-  .btn-hover-glow:hover {
-    transform: none;
-  }
+/* Grid pattern background */
+.grid-pattern {
+  background-image: 
+    linear-gradient(rgba(147, 51, 234, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(147, 51, 234, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
 }
 
-/* Efeitos especiais para botões do WhatsApp */
-.whatsapp-green {
-  background-color: #25D366;
+/* Particles effect */
+@keyframes particle-float {
+  0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+  25% { transform: translateY(-20px) translateX(10px) rotate(90deg); }
+  50% { transform: translateY(-10px) translateX(-10px) rotate(180deg); }
+  75% { transform: translateY(-30px) translateX(5px) rotate(270deg); }
 }
 
-.whatsapp-green:hover {
-  background-color: #20BA5A;
-}
-
-.whatsapp-bubble {
-  position: relative;
-  background-color: #DCF8C6;
-  border-radius: 18px;
-  padding: 10px 15px;
-  margin: 5px 0;
-}
-
-.whatsapp-bubble:before {
-  content: '';
+.particle {
   position: absolute;
-  top: 0;
-  right: -10px;
-  width: 0;
-  height: 0;
-  border: 10px solid transparent;
-  border-left-color: #DCF8C6;
-  border-right: 0;
-  border-top: 0;
-  margin-top: 10px;
+  width: 4px;
+  height: 4px;
+  background: linear-gradient(45deg, #9333ea, #06b6d4);
+  border-radius: 50%;
+  animation: particle-float 10s linear infinite;
+  opacity: 0.6;
 }
 
-.whatsapp-bubble.received {
-  background-color: #FFFFFF;
-  margin-left: 0;
-  margin-right: 50px;
+/* Holographic effect */
+.holographic {
+  background: linear-gradient(45deg, 
+    transparent 30%, 
+    rgba(147, 51, 234, 0.5) 50%, 
+    transparent 70%
+  );
+  background-size: 200% 200%;
+  animation: hologram 3s ease infinite;
 }
 
-.whatsapp-bubble.received:before {
-  left: -10px;
-  right: auto;
-  border-left: 0;
-  border-right-color: #FFFFFF;
+@keyframes hologram {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
