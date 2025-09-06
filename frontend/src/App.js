@@ -845,7 +845,71 @@ function App() {
     </div>
   );
 
-  // Componente de Gráfico Interativo
+  // Componente de Pagamento PIX
+  const PixPaymentModal = () => (
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-black/60 backdrop-blur-xl p-8 rounded-3xl border border-green-500/30 max-w-md w-full mx-4">
+        <div className="text-center mb-6">
+          <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            {Icons.pix}
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-2">Pagamento PIX</h2>
+          <p className="text-gray-400">R$ {pixPaymentData?.amount.toFixed(2)}</p>
+        </div>
+
+        <div className="space-y-6">
+          {/* QR Code simulado */}
+          <div className="bg-white p-4 rounded-lg">
+            <div className="w-48 h-48 mx-auto bg-black flex items-center justify-center">
+              <div className="text-white text-xs text-center">
+                QR CODE PIX<br/>
+                {pixPaymentData?.amount.toFixed(2)}
+              </div>
+            </div>
+          </div>
+
+          {/* Chave PIX */}
+          <div className="bg-green-900/20 p-4 rounded-lg border border-green-500/20">
+            <p className="text-green-400 text-sm mb-2">Chave PIX:</p>
+            <div className="flex items-center justify-between">
+              <p className="text-white font-mono text-sm">{pixPaymentData?.pixKey}</p>
+              <button 
+                onClick={() => {
+                  navigator.clipboard.writeText(pixPaymentData?.pixKey);
+                  showNotification('📋 Chave PIX copiada!', 'success');
+                }}
+                className="text-green-400 hover:text-green-300 text-sm"
+              >
+                Copiar
+              </button>
+            </div>
+          </div>
+
+          {/* Timer */}
+          <div className="text-center">
+            <p className="text-gray-400 text-sm">Expira em: 30 minutos</p>
+          </div>
+
+          {/* Botões */}
+          <div className="space-y-3">
+            <button
+              onClick={confirmPixPayment}
+              className="w-full p-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-bold hover:from-green-600 hover:to-green-700 transition-all flex items-center justify-center space-x-2"
+            >
+              {Icons.pix}
+              <span>Confirmar Pagamento</span>
+            </button>
+            <button
+              onClick={cancelPixPayment}
+              className="w-full p-3 border border-red-500/50 text-red-300 rounded-xl hover:bg-red-800/30 transition-all"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
   const InteractiveChart = ({ data }) => {
     const [hoveredBar, setHoveredBar] = useState(null);
     const maxValue = Math.max(...data.map(d => d.value));
