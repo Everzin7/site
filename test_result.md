@@ -246,8 +246,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Simulador de chat WhatsApp em tempo real"
-    - "Upload de produtos e importação CSV"
+    - "Sistema de roles Admin/Mod"
+    - "Sistema de giftcards"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
