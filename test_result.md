@@ -179,6 +179,9 @@ backend:
       - working: true
         agent: "main"
         comment: "✅ IMPLEMENTADO: Authorization middleware, usuários padrão (admin: adm@ever.com/everto1n, mod: mod@ever.com/mod123), endpoints admin (/api/admin/stats, /api/admin/users, /api/admin/users/ban, /api/admin/users/{user_id}), permissões funcionando (mod pode banir, admin pode tudo)."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTADO COMPLETAMENTE: Sistema Admin/Mod 100% funcional. Admin login (adm@ever.com/everto1n) ✅, Mod login (mod@ever.com/mod123) ✅. Endpoints admin-only: /api/admin/stats ✅, /api/admin/users ✅, DELETE /api/admin/users/{id} ✅. Endpoints admin/mod: POST /api/admin/users/ban ✅. Autorização perfeita: mod negado acesso admin stats ✅, usuário comum negado ✅, admin protegido contra ban ✅. Todas as permissões funcionando conforme especificado."
 
   - task: "Sistema de giftcards"
     implemented: true
