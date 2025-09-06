@@ -299,8 +299,8 @@ async def get_admin_stats(admin_user_id: str):
             "id": user["id"],
             "name": user["name"],
             "email": user["email"],
-            "role": user["role"],
-            "created_at": user["created_at"].strftime("%Y-%m-%d"),
+            "role": user.get("role", "user"),  # Default to 'user' if no role
+            "created_at": user.get("created_at", datetime.now(timezone.utc)).strftime("%Y-%m-%d") if isinstance(user.get("created_at"), datetime) else str(user.get("created_at", "N/A"))[:10],
             "status": "active"  # Por enquanto todos são ativos
         })
     
