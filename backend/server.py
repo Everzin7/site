@@ -204,33 +204,46 @@ async def require_admin(user_id: str) -> Dict:
 # Função para criar usuários padrão
 async def create_default_users():
     """Cria usuários admin e mod padrão se não existirem"""
-    # Verificar se admin já existe
-    admin_exists = await db.users.find_one({"email": "adm@ever.com"})
-    if not admin_exists:
-        admin_user = User(
-            name="Administrador",
-            email="adm@ever.com",
-            password_hash=hash_password("everto1n"),
-            role="admin"
-        )
-        admin_dict = admin_user.dict()
-        admin_dict = prepare_for_mongo(admin_dict)
-        await db.users.insert_one(admin_dict)
-        print("✅ Usuário admin padrão criado: adm@ever.com / everto1n")
-    
-    # Verificar se mod já existe  
-    mod_exists = await db.users.find_one({"email": "mod@ever.com"})
-    if not mod_exists:
-        mod_user = User(
-            name="Moderador",
-            email="mod@ever.com", 
-            password_hash=hash_password("mod123"),
-            role="mod"
-        )
-        mod_dict = mod_user.dict()
-        mod_dict = prepare_for_mongo(mod_dict)
-        await db.users.insert_one(mod_dict)
-        print("✅ Usuário mod padrão criado: mod@ever.com / mod123")
+    try:
+        # Verificar se admin já existe
+        admin_exists = await db.users.find_one({"email": "adm@ever.com"})
+        if not admin_exists:
+            admin_user = {
+                "id": "admin-user-default",
+                "name": "Administrador",
+                "email": "adm@ever.com",
+                "password_hash": hash_password("everto1n"),
+                "role": "admin",
+                "referral_code": "ADMIN123",
+                "referred_by": None,
+                "balance": 999999.99,
+                "total_earnings": 0.0,
+                "referral_earnings": 0.0,
+                "created_at": datetime.now(timezone.utc).isoformat()
+            }
+            await db.users.insert_one(admin_user)
+            print("✅ Usuário admin padrão criado: adm@ever.com / everto1n")
+        
+        # Verificar se mod já existe  
+        mod_exists = await db.users.find_one({"email": "mod@ever.com"})
+        if not mod_exists:
+            mod_user = {
+                "id": "mod-user-default",
+                "name": "Moderador",
+                "email": "mod@ever.com", 
+                "password_hash": hash_password("mod123"),
+                "role": "mod",
+                "referral_code": "MOD123",
+                "referred_by": None,
+                "balance": 0.0,
+                "total_earnings": 0.0,
+                "referral_earnings": 0.0,
+                "created_at": datetime.now(timezone.utc).isoformat()
+            }
+            await db.users.insert_one(mod_user)
+            print("✅ Usuário mod padrão criado: mod@ever.com / mod123")
+    except Exception as e:
+        print(f"Erro ao criar usuários padrão: {e}")
 
 # Endpoints de Autenticação
 @app.post("/api/auth/register")
