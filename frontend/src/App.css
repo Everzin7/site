@@ -50,6 +50,17 @@
   }
 }
 
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.8; transform: scale(1.05); }
@@ -73,6 +84,17 @@
 @keyframes glow {
   0%, 100% { box-shadow: 0 0 20px rgba(147, 51, 234, 0.5); }
   50% { box-shadow: 0 0 40px rgba(147, 51, 234, 0.8), 0 0 60px rgba(6, 182, 212, 0.3); }
+}
+
+@keyframes counterUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Animação do gradiente de texto */
@@ -158,7 +180,7 @@
   box-shadow: 0 15px 40px rgba(147, 51, 234, 0.6);
 }
 
-/* Inputs futuristas */
+/* Inputs futuristas - CORRIGINDO BUG DO CURSOR */
 .futuristic-input {
   width: 100%;
   padding: 1rem 1.5rem;
@@ -169,6 +191,7 @@
   font-size: 1rem;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
+  outline: none; /* Importante para evitar conflitos */
 }
 
 .futuristic-input::placeholder {
@@ -176,7 +199,6 @@
 }
 
 .futuristic-input:focus {
-  outline: none;
   border-color: #9333ea;
   box-shadow: 0 0 20px rgba(147, 51, 234, 0.4), inset 0 0 20px rgba(147, 51, 234, 0.1);
   background: rgba(0, 0, 0, 0.6);
@@ -192,6 +214,7 @@
   font-size: 0.9rem;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
+  outline: none;
 }
 
 .futuristic-input-sm::placeholder {
@@ -199,7 +222,6 @@
 }
 
 .futuristic-input-sm:focus {
-  outline: none;
   border-color: #9333ea;
   box-shadow: 0 0 15px rgba(147, 51, 234, 0.4);
   background: rgba(0, 0, 0, 0.6);
@@ -215,10 +237,10 @@
   font-size: 0.9rem;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
+  outline: none;
 }
 
 .futuristic-select:focus {
-  outline: none;
   border-color: #9333ea;
   box-shadow: 0 0 15px rgba(147, 51, 234, 0.4);
 }
@@ -237,6 +259,7 @@
   color: white;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
+  outline: none;
 }
 
 .futuristic-file-input:hover {
@@ -253,6 +276,7 @@
   appearance: none;
   cursor: pointer;
   transition: all 0.3s ease;
+  outline: none;
 }
 
 .futuristic-checkbox:checked {
@@ -283,6 +307,7 @@
   position: relative;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(147, 51, 234, 0.4);
+  outline: none;
 }
 
 .futuristic-btn-main::before {
@@ -315,6 +340,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 5px 15px rgba(5, 150, 105, 0.4);
+  outline: none;
 }
 
 .futuristic-btn-green:hover {
@@ -333,6 +359,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 5px 15px rgba(29, 78, 216, 0.4);
+  outline: none;
 }
 
 .futuristic-btn-blue:hover {
@@ -430,6 +457,11 @@
 .typing-indicator span:nth-of-type(1) { animation: bounce 1.4s ease-in-out infinite both; }
 .typing-indicator span:nth-of-type(2) { animation: bounce 1.4s ease-in-out 0.2s infinite both; }
 .typing-indicator span:nth-of-type(3) { animation: bounce 1.4s ease-in-out 0.4s infinite both; }
+
+/* Counter animation */
+.counter {
+  animation: counterUp 1s ease-out;
+}
 
 /* Efeitos especiais */
 .glass-effect {
