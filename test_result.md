@@ -197,6 +197,9 @@ backend:
       - working: true
         agent: "main"
         comment: "✅ IMPLEMENTADO: Endpoints /api/admin/giftcards (POST/GET para admins), /api/giftcards/redeem (POST para users), formato 16 dígitos alfanuméricos maiúsculos (XXXX-XXXX-XXXX-XXXX), validação funcional testada."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTADO COMPLETAMENTE: Sistema Giftcards 100% funcional. Criação giftcard (admin-only) ✅, listagem giftcards (admin-only) ✅, resgate giftcard (qualquer usuário) ✅. Validações perfeitas: valor mínimo R$ 1,00 ✅, formato 16 dígitos alfanuméricos maiúsculos (XXXX-XXXX-XXXX-XXXX) ✅, giftcard inválido rejeitado ✅, giftcard já usado rejeitado ✅. Autorização: mod negado criação giftcard ✅. Sequência completa testada: admin cria → usuário resgata → saldo atualizado."
 
 frontend:
   - task: "Home page com efeito parallax"
