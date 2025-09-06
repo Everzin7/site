@@ -35,6 +35,11 @@ mongo_url = os.environ.get('MONGO_URL')
 client = AsyncIOMotorClient(mongo_url)
 db = client.whatsapp_bot_builder
 
+# Evento de startup para criar usuários padrão
+@app.on_event("startup")
+async def startup_event():
+    await create_default_users()
+
 # Modelos Pydantic
 class User(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
