@@ -148,6 +148,20 @@ function App() {
   const [simulatorMessage, setSimulatorMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [userBots, setUserBots] = useState([]);
+  const [walletData, setWalletData] = useState({
+    balance: 250.00,
+    transactions: [
+      { id: 1, type: 'deposit', amount: 100.00, method: 'PIX', status: 'completed', date: '2025-01-05T10:30:00Z', description: 'Recarga de saldo' },
+      { id: 2, type: 'referral', amount: 15.00, method: 'bonus', status: 'completed', date: '2025-01-04T15:20:00Z', description: 'Bônus de indicação' },
+      { id: 3, type: 'purchase', amount: -127.00, method: 'balance', status: 'completed', date: '2025-01-03T09:15:00Z', description: 'Compra Bot Premium' }
+    ]
+  });
+  const [addBalanceData, setAddBalanceData] = useState({
+    amount: '',
+    method: 'pix'
+  });
+  const [showPixPayment, setShowPixPayment] = useState(false);
+  const [pixPaymentData, setPixPaymentData] = useState(null);
   const [dashboardData, setDashboardData] = useState({
     totalBots: 12,
     activeBots: 8,
