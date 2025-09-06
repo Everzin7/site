@@ -191,7 +191,8 @@ function App() {
       last28days: 0
     },
     recentUsers: [],
-    giftcards: []
+    giftcards: [],
+    allUsers: []
   });
   const [dashboardData, setDashboardData] = useState({
     totalBots: 12,
