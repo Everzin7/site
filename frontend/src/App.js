@@ -405,7 +405,36 @@ function App() {
     }, 3000);
   };
 
-  // Função para cancelar pagamento PIX
+  // Função separada para salvar e ir para pagamento
+  const saveBotAndGoToPayment = async () => {
+    if (!user) {
+      showNotification('❌ Faça login para salvar seu bot e prosseguir com o pagamento', 'error');
+      return false;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE}/api/bots`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...botConfig, user_id: user.id })
+      });
+      
+      if (response.ok) {
+        const savedBot = await response.json();
+        setBotConfig(savedBot);
+        showNotification('✅ Bot salvo! Redirecionando para pagamento...', 'success');
+        setCurrentView('payment');
+        loadUserBots(user.id);
+        return true;
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Erro ao salvar bot');
+      }
+    } catch (error) {
+      showNotification('❌ Erro ao salvar bot', 'error');
+      return false;
+    }
+  };
   const cancelPixPayment = () => {
     setShowPixPayment(false);
     setPixPaymentData(null);
