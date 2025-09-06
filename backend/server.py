@@ -1,17 +1,19 @@
-from fastapi import FastAPI, HTTPException, UploadFile, File, Form
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 import uuid
 import os
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import json
 import csv
 import io
 from dotenv import load_dotenv
 import hashlib
 import secrets
+import string
+import random
 
 # Carregar variáveis de ambiente
 load_dotenv()
