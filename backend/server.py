@@ -44,6 +44,7 @@ class User(BaseModel):
     balance: float = 0.0
     total_earnings: float = 0.0
     referral_earnings: float = 0.0
+    role: str = "user"  # user, mod, admin
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class UserRegister(BaseModel):
