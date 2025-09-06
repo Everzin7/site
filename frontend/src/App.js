@@ -314,7 +314,6 @@ function App() {
         }
       } else if (response.status === 401) {
         console.log('❌ Login inválido - 401');
-        alert('❌ Email ou senha incorretos');
         showNotification('❌ Email ou senha incorretos', 'error');
       } else {
         console.log('❌ Erro no servidor:', response.status);
