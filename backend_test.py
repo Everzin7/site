@@ -823,8 +823,8 @@ Teclado Mecânico,Teclado mecânico para programadores,199.99,Periféricos,https
         
         results = {}
         
-        # Test sequence
-        tests = [
+        # Test sequence - Original tests
+        original_tests = [
             ("Health Check", self.test_health_check),
             ("Bot Creation", self.test_create_bot),
             ("Bot Retrieval", self.test_get_bot),
@@ -837,7 +837,38 @@ Teclado Mecânico,Teclado mecânico para programadores,199.99,Periféricos,https
             ("Chat History", self.test_chat_history)
         ]
         
-        for test_name, test_func in tests:
+        # Admin/Mod and Giftcards tests
+        admin_tests = [
+            ("Admin Login", self.test_admin_login),
+            ("Mod Login", self.test_mod_login),
+            ("Regular User Registration", self.test_regular_user_registration),
+            ("Admin Stats", self.test_admin_stats),
+            ("Admin List Users", self.test_admin_list_users),
+            ("Mod Cannot Access Admin Stats", self.test_mod_cannot_access_admin_stats),
+            ("Regular User Cannot Access Admin", self.test_regular_user_cannot_access_admin),
+            ("Admin Ban User", self.test_admin_ban_user),
+            ("Mod Can Ban User", self.test_mod_can_ban_user),
+            ("Cannot Ban Admin", self.test_cannot_ban_admin),
+            ("Admin Delete User", self.test_admin_delete_user),
+            ("Create Giftcard", self.test_create_giftcard),
+            ("Mod Cannot Create Giftcard", self.test_mod_cannot_create_giftcard),
+            ("Giftcard Minimum Amount", self.test_giftcard_minimum_amount),
+            ("List Giftcards", self.test_list_giftcards),
+            ("Redeem Giftcard", self.test_redeem_giftcard),
+            ("Redeem Invalid Giftcard", self.test_redeem_invalid_giftcard),
+            ("Redeem Already Used Giftcard", self.test_redeem_already_used_giftcard)
+        ]
+        
+        # Run original tests first
+        print("\n🔧 RUNNING ORIGINAL API TESTS")
+        print("-" * 40)
+        for test_name, test_func in original_tests:
+            results[test_name] = test_func()
+        
+        # Run admin/mod and giftcards tests
+        print("\n👑 RUNNING ADMIN/MOD & GIFTCARDS TESTS")
+        print("-" * 40)
+        for test_name, test_func in admin_tests:
             results[test_name] = test_func()
         
         # Summary
@@ -848,11 +879,20 @@ Teclado Mecânico,Teclado mecânico para programadores,199.99,Periféricos,https
         passed = sum(results.values())
         total = len(results)
         
-        for test_name, result in results.items():
+        # Separate original and admin tests in summary
+        print("\n🔧 ORIGINAL API TESTS:")
+        for test_name, test_func in original_tests:
+            result = results[test_name]
             status = "✅ PASS" if result else "❌ FAIL"
-            print(f"{test_name:<20} {status}")
+            print(f"  {test_name:<25} {status}")
         
-        print(f"\nOverall: {passed}/{total} tests passed ({passed/total*100:.1f}%)")
+        print("\n👑 ADMIN/MOD & GIFTCARDS TESTS:")
+        for test_name, test_func in admin_tests:
+            result = results[test_name]
+            status = "✅ PASS" if result else "❌ FAIL"
+            print(f"  {test_name:<35} {status}")
+        
+        print(f"\n🎯 Overall: {passed}/{total} tests passed ({passed/total*100:.1f}%)")
         
         return results
 
