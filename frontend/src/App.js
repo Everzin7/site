@@ -490,35 +490,31 @@ function App() {
       return;
     }
 
-    // Gerar código de 16 dígitos (letras e números)
-    const generateCode = () => {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-      let result = '';
-      for (let i = 0; i < 16; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    try {
+      const response = await fetch(`${API_BASE}/api/admin/giftcards?admin_user_id=${user.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: amount })
+      });
+
+      if (response.ok) {
+        const newGiftcard = await response.json();
+        
+        // Atualizar lista local de giftcards
+        setAdminData(prev => ({
+          ...prev,
+          giftcards: [newGiftcard, ...prev.giftcards]
+        }));
+
+        setGiftcardData({ code: '', amount: '', created_by: '' });
+        showNotification(`✅ Giftcard criado: ${newGiftcard.code}`, 'success');
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Erro ao criar giftcard');
       }
-      return result.match(/.{1,4}/g).join('-'); // Formato XXXX-XXXX-XXXX-XXXX
-    };
-
-    const newGiftcard = {
-      id: Date.now(),
-      code: generateCode(),
-      amount: amount,
-      status: 'active',
-      created_by: user.name,
-      created_at: new Date().toISOString(),
-      redeemed_by: null,
-      redeemed_at: null
-    };
-
-    // Simular salvamento no backend
-    setAdminData(prev => ({
-      ...prev,
-      giftcards: [newGiftcard, ...prev.giftcards]
-    }));
-
-    setGiftcardData({ code: '', amount: '', created_by: '' });
-    showNotification(`✅ Giftcard criado: ${newGiftcard.code}`, 'success');
+    } catch (error) {
+      showNotification('❌ Erro ao criar giftcard: ' + error.message, 'error');
+    }
   };
 
   // Função para resgatar giftcard
@@ -528,46 +524,53 @@ function App() {
       return;
     }
 
-    // Simular verificação no backend
-    const giftcard = adminData.giftcards.find(gc => 
-      gc.code === redeemCode.toUpperCase() && gc.status === 'active'
-    );
-
-    if (!giftcard) {
-      showNotification('❌ Giftcard inválido ou já utilizado', 'error');
+    if (!user) {
+      showNotification('❌ Faça login para resgatar giftcard', 'error');
       return;
     }
 
-    // Resgatar giftcard
-    setWalletData(prev => ({
-      ...prev,
-      balance: prev.balance + giftcard.amount,
-      transactions: [
-        {
-          id: Date.now(),
-          type: 'giftcard',
-          amount: giftcard.amount,
-          method: 'giftcard',
-          status: 'completed',
-          date: new Date().toISOString(),
-          description: `Giftcard resgatado: ${giftcard.code}`
-        },
-        ...prev.transactions
-      ]
-    }));
+    try {
+      const response = await fetch(`${API_BASE}/api/giftcards/redeem?user_id=${user.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: redeemCode.toUpperCase() })
+      });
 
-    // Marcar como usado
-    setAdminData(prev => ({
-      ...prev,
-      giftcards: prev.giftcards.map(gc => 
-        gc.code === giftcard.code 
-          ? { ...gc, status: 'redeemed', redeemed_by: user?.name || 'Demo User', redeemed_at: new Date().toISOString() }
-          : gc
-      )
-    }));
+      if (response.ok) {
+        const result = await response.json();
+        
+        // Atualizar saldo local (recarregar dados do usuário seria melhor)
+        setWalletData(prev => ({
+          ...prev,
+          balance: prev.balance + result.amount,
+          transactions: [
+            {
+              id: Date.now(),
+              type: 'giftcard',
+              amount: result.amount,
+              method: 'giftcard',
+              status: 'completed',
+              date: new Date().toISOString(),
+              description: `Giftcard resgatado: ${result.code}`
+            },
+            ...prev.transactions
+          ]
+        }));
 
-    setRedeemCode('');
-    showNotification(`✅ Giftcard resgatado! R$ ${giftcard.amount.toFixed(2)} adicionados ao saldo`, 'success');
+        setRedeemCode('');
+        showNotification(result.message, 'success');
+        
+        // Recarregar giftcards se for admin
+        if (user.role === 'admin') {
+          loadAdminGiftcards();
+        }
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Erro ao resgatar giftcard');
+      }
+    } catch (error) {
+      showNotification('❌ ' + error.message, 'error');
+    }
   };
 
   // Função para banir usuário (admin/mod)
