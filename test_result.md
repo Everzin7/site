@@ -165,6 +165,30 @@ backend:
         agent: "testing"
         comment: "✅ TESTADO: Histórico de chat funcionando. Recuperou 4 mensagens da sessão de teste com timestamps corretos e identificação de sender (user/bot)."
 
+  - task: "Sistema de roles Admin/Mod"
+    implemented: false
+    working: false
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Iniciando implementação. Preciso adicionar: authorization middleware, endpoints admin (user management, ban/delete users, statistics), criar usuários admin/mod padrão."
+
+  - task: "Sistema de giftcards"
+    implemented: false
+    working: false
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Preciso implementar: endpoints para criar giftcards (admin only), resgatar giftcards (users), validação formato 16 dígitos alfanuméricos maiúsculos."
+
 frontend:
   - task: "Home page com efeito parallax"
     implemented: true
