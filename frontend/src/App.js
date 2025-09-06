@@ -1309,7 +1309,7 @@ function App() {
                   Pronto para revolucionar seu atendimento?
                 </h2>
                 <button 
-                  onClick={() => user ? setCurrentView('builder') : setShowRegister(true)}
+                  onClick={() => setCurrentView('builder')}
                   className="px-12 py-6 bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-2xl text-2xl font-bold hover:from-purple-600 hover:to-cyan-600 transform hover:scale-105 transition-all duration-300 shadow-2xl shadow-purple-500/50 flex items-center justify-center space-x-3 mx-auto"
                 >
                   <span>Criar Meu Bot Agora</span>
