@@ -458,8 +458,8 @@ function App() {
 
   const saveBotConfig = async () => {
     if (!user) {
-      // Modo demo - apenas simular salvamento SEM redirecionar
-      showNotification('✅ Bot salvo em modo demo! Faça login para salvar permanentemente.', 'info');
+      // Modo demo - apenas simular salvamento SEM mensagem de pagamento
+      showNotification('✅ Bot salvo em modo demo!', 'info');
       return true;
     }
 
@@ -473,9 +473,7 @@ function App() {
       if (response.ok) {
         const savedBot = await response.json();
         setBotConfig(savedBot);
-        showNotification('✅ Bot salvo! Prossiga para o pagamento.', 'success');
-        // Só redireciona para pagamento se o usuário clicar no botão de salvar manualmente
-        // Não redireciona automaticamente durante simulação
+        showNotification('✅ Bot salvo com sucesso!', 'success');
         loadUserBots(user.id);
         return true;
       } else {
