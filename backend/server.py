@@ -184,8 +184,11 @@ async def get_current_user(user_id: str) -> Dict:
     """Busca usuário atual por ID"""
     user = await db.users.find_one({"id": user_id})
     if not user:
+        # Para compatibilidade, vamos buscar também pelo user_id se não achar pelo id
+        user = await db.users.find_one({"user_id": user_id})
+    if not user:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
-    return user
+    return parse_from_mongo(user)
 
 async def require_admin_or_mod(user_id: str) -> Dict:
     """Requer que o usuário seja admin ou mod"""
