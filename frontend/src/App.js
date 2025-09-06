@@ -1190,7 +1190,294 @@ function App() {
           </div>
         )}
 
-        {/* Dashboard Section - Melhorado com gráficos interativos */}
+        {/* Wallet Section */}
+        {currentView === 'wallet' && user && (
+          <div className="max-w-7xl mx-auto px-4 py-8">
+            <div className="mb-8">
+              <h1 className="text-4xl font-bold text-white mb-2 flex items-center space-x-3">
+                {Icons.wallet}
+                <span>Carteira</span>
+              </h1>
+              <p className="text-gray-400">Gerencie seu saldo e histórico de transações</p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+              {/* Card de Saldo */}
+              <div className="lg:col-span-1 bg-gradient-to-br from-green-900/40 to-emerald-900/40 backdrop-blur-xl rounded-2xl p-6 border border-green-500/20">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    {Icons.wallet}
+                  </div>
+                  <h3 className="text-xl font-bold text-green-300 mb-2">Saldo Disponível</h3>
+                  <p className="text-4xl font-bold text-white mb-4">R$ {walletData.balance.toFixed(2)}</p>
+                  <button
+                    onClick={() => setCurrentView('add-balance')}
+                    className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 rounded-xl font-bold hover:from-green-600 hover:to-emerald-700 transition-all flex items-center justify-center space-x-2"
+                  >
+                    {Icons.add}
+                    <span>Adicionar Saldo</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Estatísticas */}
+              <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/20">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-gray-400 text-sm">Total Recarregado</p>
+                      <p className="text-2xl font-bold text-blue-400">R$ 350,00</p>
+                    </div>
+                    <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
+                      {Icons.trending_up}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/20">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-gray-400 text-sm">Bônus Referência</p>
+                      <p className="text-2xl font-bold text-purple-400">R$ 45,00</p>
+                    </div>
+                    <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
+                      {Icons.user}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-yellow-500/20">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-gray-400 text-sm">Total Gasto</p>
+                      <p className="text-2xl font-bold text-yellow-400">R$ 254,00</p>
+                    </div>
+                    <div className="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center">
+                      {Icons.credit_card}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-cyan-500/20">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-gray-400 text-sm">Economia</p>
+                      <p className="text-2xl font-bold text-cyan-400">15%</p>
+                    </div>
+                    <div className="w-12 h-12 bg-cyan-500/20 rounded-xl flex items-center justify-center">
+                      {Icons.chart}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Histórico de Transações */}
+            <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/20">
+              <h3 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
+                {Icons.history}
+                <span>Histórico de Transações</span>
+              </h3>
+
+              <div className="space-y-4">
+                {walletData.transactions.map((transaction) => (
+                  <div
+                    key={transaction.id}
+                    className="flex items-center justify-between p-4 bg-black/30 rounded-xl border border-purple-500/10 hover:border-purple-500/30 transition-all"
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                        transaction.type === 'deposit' ? 'bg-green-500/20 text-green-400' :
+                        transaction.type === 'referral' ? 'bg-purple-500/20 text-purple-400' :
+                        'bg-red-500/20 text-red-400'
+                      }`}>
+                        {transaction.type === 'deposit' ? Icons.add :
+                         transaction.type === 'referral' ? Icons.user :
+                         Icons.credit_card}
+                      </div>
+                      <div>
+                        <p className="text-white font-medium">{transaction.description}</p>
+                        <p className="text-gray-400 text-sm">
+                          {new Date(transaction.date).toLocaleDateString('pt-BR')} • {transaction.method}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className={`text-lg font-bold ${
+                        transaction.amount > 0 ? 'text-green-400' : 'text-red-400'
+                      }`}>
+                        {transaction.amount > 0 ? '+' : ''}R$ {Math.abs(transaction.amount).toFixed(2)}
+                      </p>
+                      <span className={`text-xs px-2 py-1 rounded-full ${
+                        transaction.status === 'completed' ? 'bg-green-500/20 text-green-400' :
+                        transaction.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' :
+                        'bg-red-500/20 text-red-400'
+                      }`}>
+                        {transaction.status === 'completed' ? 'Concluído' :
+                         transaction.status === 'pending' ? 'Pendente' : 'Cancelado'}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Add Balance Section */}
+        {currentView === 'add-balance' && user && (
+          <div className="max-w-4xl mx-auto px-4 py-8">
+            <div className="bg-black/40 backdrop-blur-xl rounded-3xl p-8 border border-green-500/20">
+              <div className="text-center mb-8">
+                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  {Icons.add}
+                </div>
+                <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+                  Adicionar Saldo
+                </h2>
+                <p className="text-gray-400">Recarregue sua carteira para usar todos os recursos</p>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-8">
+                {/* Formulário */}
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-3">
+                      Valor da Recarga
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">R$</span>
+                      <input
+                        type="number"
+                        step="0.01"
+                        min="1"
+                        placeholder="0,00"
+                        value={addBalanceData.amount}
+                        onChange={(e) => setAddBalanceData(prev => ({ ...prev, amount: e.target.value }))}
+                        className="futuristic-input pl-12"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Valores sugeridos */}
+                  <div>
+                    <p className="text-sm font-medium text-gray-300 mb-3">Valores Sugeridos</p>
+                    <div className="grid grid-cols-3 gap-2">
+                      {[50, 100, 200].map(value => (
+                        <button
+                          key={value}
+                          onClick={() => setAddBalanceData(prev => ({ ...prev, amount: value.toString() }))}
+                          className="p-3 border border-green-500/30 text-green-300 rounded-lg hover:bg-green-800/20 transition-all text-sm font-medium"
+                        >
+                          R$ {value}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Método de pagamento */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-3">
+                      Método de Pagamento
+                    </label>
+                    <div className="space-y-2">
+                      <label className="flex items-center p-4 border border-green-500/30 rounded-lg hover:bg-green-800/10 transition-all cursor-pointer">
+                        <input
+                          type="radio"
+                          name="payment"
+                          value="pix"
+                          checked={addBalanceData.method === 'pix'}
+                          onChange={(e) => setAddBalanceData(prev => ({ ...prev, method: e.target.value }))}
+                          className="mr-3"
+                        />
+                        <div className="flex items-center space-x-3">
+                          {Icons.pix}
+                          <div>
+                            <p className="text-white font-medium">PIX</p>
+                            <p className="text-gray-400 text-sm">Aprovação instantânea</p>
+                          </div>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={processAddBalance}
+                    disabled={!addBalanceData.amount || parseFloat(addBalanceData.amount) < 1}
+                    className="w-full p-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold hover:from-green-600 hover:to-emerald-700 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed transition-all flex items-center justify-center space-x-2"
+                  >
+                    {Icons.pix}
+                    <span>Prosseguir com PIX</span>
+                  </button>
+                </div>
+
+                {/* Informações */}
+                <div className="space-y-6">
+                  <div className="bg-green-900/20 p-6 rounded-2xl border border-green-500/20">
+                    <h3 className="text-lg font-bold text-green-300 mb-4 flex items-center space-x-2">
+                      {Icons.wallet}
+                      <span>Saldo Atual</span>
+                    </h3>
+                    <p className="text-3xl font-bold text-white mb-2">R$ {walletData.balance.toFixed(2)}</p>
+                    {addBalanceData.amount && parseFloat(addBalanceData.amount) > 0 && (
+                      <p className="text-green-400">
+                        Novo saldo: R$ {(walletData.balance + parseFloat(addBalanceData.amount)).toFixed(2)}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="bg-purple-900/20 p-6 rounded-2xl border border-purple-500/20">
+                    <h3 className="text-lg font-bold text-purple-300 mb-4 flex items-center space-x-2">
+                      {Icons.user}
+                      <span>Sistema de Referência</span>
+                    </h3>
+                    <p className="text-gray-300 text-sm mb-3">
+                      Recargas de R$ 50,00 ou mais geram 10% de bônus para quem te indicou!
+                    </p>
+                    {addBalanceData.amount && parseFloat(addBalanceData.amount) >= 50 && (
+                      <div className="bg-purple-800/30 p-3 rounded-lg">
+                        <p className="text-purple-300 text-sm">
+                          🎉 Seu indicador ganhará: R$ {(parseFloat(addBalanceData.amount) * 0.10).toFixed(2)}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="bg-blue-900/20 p-6 rounded-2xl border border-blue-500/20">
+                    <h3 className="text-lg font-bold text-blue-300 mb-4">Vantagens</h3>
+                    <ul className="space-y-2 text-sm text-gray-300">
+                      <li className="flex items-center space-x-2">
+                        <span className="text-green-400">✓</span>
+                        <span>PIX instantâneo e seguro</span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <span className="text-green-400">✓</span>
+                        <span>Sem taxas adicionais</span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <span className="text-green-400">✓</span>
+                        <span>Disponível 24/7</span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <span className="text-green-400">✓</span>
+                        <span>Bônus para indicadores</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <button
+                    onClick={() => setCurrentView('wallet')}
+                    className="w-full p-3 border border-purple-500/50 text-purple-300 rounded-xl hover:bg-purple-800/30 transition-all"
+                  >
+                    Voltar para Carteira
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Dashboard Section */}
         {currentView === 'dashboard' && user && (
           <div className="max-w-7xl mx-auto px-4 py-8">
             <div className="mb-8">
