@@ -222,9 +222,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Simulador de chat com IA Gemini 2.0"
-    - "API de configuração de bot"
-    - "Sistema de produtos com upload e CSV"
+    - "Simulador de chat WhatsApp em tempo real"
+    - "Upload de produtos e importação CSV"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
