@@ -323,8 +323,22 @@ function App() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    
+    // Validações
+    if (!registerData.name || !registerData.email || !registerData.password) {
+      showNotification('❌ Preencha todos os campos', 'error');
+      return;
+    }
+    
     if (registerData.password.length < 6) {
       showNotification('❌ Senha deve ter pelo menos 6 caracteres', 'error');
+      return;
+    }
+
+    // Validação básica de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(registerData.email)) {
+      showNotification('❌ Email inválido', 'error');
       return;
     }
     
@@ -344,12 +358,20 @@ function App() {
         showNotification('✅ Conta criada e login automático realizado!', 'success');
         setCurrentView('dashboard');
         loadDashboardData(userData.id);
+      } else if (response.status === 400) {
+        const errorData = await response.json().catch(() => ({ detail: 'Email já cadastrado' }));
+        showNotification('❌ ' + (errorData.detail || 'Email já cadastrado'), 'error');
       } else {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Erro ao criar conta');
+        const errorData = await response.json().catch(() => ({ detail: 'Erro no servidor' }));
+        showNotification('❌ Erro no registro: ' + (errorData.detail || 'Erro desconhecido'), 'error');
       }
     } catch (error) {
-      showNotification('❌ Erro no registro: ' + error.message, 'error');
+      console.error('Erro no registro:', error);
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        showNotification('❌ Erro de conexão. Verifique sua internet e tente novamente.', 'error');
+      } else {
+        showNotification('❌ Erro no registro: ' + error.message, 'error');
+      }
     }
   };
 
