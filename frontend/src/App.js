@@ -340,7 +340,77 @@ function App() {
     }
   };
 
-  // Funções do bot builder
+  // Função para adicionar saldo
+  const processAddBalance = async () => {
+    const amount = parseFloat(addBalanceData.amount);
+    if (!amount || amount < 1) {
+      showNotification('❌ Valor mínimo para recarga é R$ 1,00', 'error');
+      return;
+    }
+
+    if (addBalanceData.method === 'pix') {
+      // Gerar dados do PIX
+      const pixData = {
+        amount: amount,
+        qrCode: `00020126360014BR.GOV.BCB.PIX0114+55119876543210520400005303986540${amount.toFixed(2)}5802BR5925WHATSAPP BOT BUILDER LTDA6009SAO PAULO62070503***6304`,
+        pixKey: '+55 (11) 98765-4321',
+        paymentId: 'PIX' + Date.now(),
+        expiresAt: new Date(Date.now() + 30 * 60 * 1000) // 30 minutos
+      };
+      
+      setPixPaymentData(pixData);
+      setShowPixPayment(true);
+    }
+  };
+
+  // Função para confirmar pagamento PIX (simulado)
+  const confirmPixPayment = async () => {
+    const amount = parseFloat(addBalanceData.amount);
+    
+    // Simular processamento
+    showNotification('⏳ Processando pagamento PIX...', 'info');
+    
+    setTimeout(async () => {
+      // Adicionar saldo
+      setWalletData(prev => ({
+        ...prev,
+        balance: prev.balance + amount,
+        transactions: [
+          {
+            id: Date.now(),
+            type: 'deposit',
+            amount: amount,
+            method: 'PIX',
+            status: 'completed',
+            date: new Date().toISOString(),
+            description: 'Recarga de saldo via PIX'
+          },
+          ...prev.transactions
+        ]
+      }));
+
+      // Processar bônus de referência se >= R$50
+      if (amount >= 50 && user?.referred_by) {
+        const referralBonus = amount * 0.10;
+        
+        // Simular adição do bônus para o indicador
+        setTimeout(() => {
+          showNotification(`🎉 Seu indicador ganhou R$ ${referralBonus.toFixed(2)} de bônus!`, 'success');
+        }, 1000);
+      }
+
+      setShowPixPayment(false);
+      setAddBalanceData({ amount: '', method: 'pix' });
+      showNotification('✅ Pagamento confirmado! Saldo adicionado com sucesso.', 'success');
+    }, 3000);
+  };
+
+  // Função para cancelar pagamento PIX
+  const cancelPixPayment = () => {
+    setShowPixPayment(false);
+    setPixPaymentData(null);
+    showNotification('❌ Pagamento cancelado', 'info');
+  };
   const showNotification = (message, type) => {
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
