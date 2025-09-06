@@ -1410,8 +1410,8 @@ function App() {
           </div>
         )}
 
-        {/* Simulator Section */}
-        {currentView === 'simulator' && user && (
+        {/* Simulator Section - Funciona em modo demo também */}
+        {currentView === 'simulator' && (
           <div className="max-w-6xl mx-auto px-4 py-8">
             <div className="bg-black/40 backdrop-blur-xl rounded-3xl shadow-2xl border border-purple-500/20 overflow-hidden">
               <div className="bg-gradient-to-r from-green-600 to-green-500 p-6 text-white relative">
