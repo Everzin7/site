@@ -144,11 +144,19 @@ def hash_password(password: str) -> str:
 def verify_password(password: str, password_hash: str) -> bool:
     return hashlib.sha256(password.encode()).hexdigest() == password_hash
 
+def generate_giftcard_code() -> str:
+    """Gera código giftcard de 16 dígitos alfanuméricos maiúsculos (formato XXXX-XXXX-XXXX-XXXX)"""
+    chars = string.ascii_uppercase + string.digits
+    code = ''.join(random.choices(chars, k=16))
+    return '-'.join([code[i:i+4] for i in range(0, 16, 4)])
+
 def prepare_for_mongo(data):
     if isinstance(data.get('created_at'), datetime):
         data['created_at'] = data['created_at'].isoformat()
     if isinstance(data.get('updated_at'), datetime):
         data['updated_at'] = data['updated_at'].isoformat()
+    if isinstance(data.get('redeemed_at'), datetime):
+        data['redeemed_at'] = data['redeemed_at'].isoformat()
     return data
 
 def parse_from_mongo(item):
@@ -156,7 +164,62 @@ def parse_from_mongo(item):
         item['created_at'] = datetime.fromisoformat(item['created_at'])
     if isinstance(item.get('updated_at'), str):
         item['updated_at'] = datetime.fromisoformat(item['updated_at'])
+    if isinstance(item.get('redeemed_at'), str):
+        item['redeemed_at'] = datetime.fromisoformat(item['redeemed_at'])
     return item
+
+# Funções de autorização
+async def get_current_user(user_id: str) -> Dict:
+    """Busca usuário atual por ID"""
+    user = await db.users.find_one({"id": user_id})
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    return user
+
+async def require_admin_or_mod(user_id: str) -> Dict:
+    """Requer que o usuário seja admin ou mod"""
+    user = await get_current_user(user_id)
+    if user.get("role") not in ["admin", "mod"]:
+        raise HTTPException(status_code=403, detail="Acesso negado: privilégios administrativos necessários")
+    return user
+
+async def require_admin(user_id: str) -> Dict:
+    """Requer que o usuário seja admin"""
+    user = await get_current_user(user_id)
+    if user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Acesso negado: apenas administradores")
+    return user
+
+# Função para criar usuários padrão
+async def create_default_users():
+    """Cria usuários admin e mod padrão se não existirem"""
+    # Verificar se admin já existe
+    admin_exists = await db.users.find_one({"email": "adm@ever.com"})
+    if not admin_exists:
+        admin_user = User(
+            name="Administrador",
+            email="adm@ever.com",
+            password_hash=hash_password("everto1n"),
+            role="admin"
+        )
+        admin_dict = admin_user.dict()
+        admin_dict = prepare_for_mongo(admin_dict)
+        await db.users.insert_one(admin_dict)
+        print("✅ Usuário admin padrão criado: adm@ever.com / everto1n")
+    
+    # Verificar se mod já existe  
+    mod_exists = await db.users.find_one({"email": "mod@ever.com"})
+    if not mod_exists:
+        mod_user = User(
+            name="Moderador",
+            email="mod@ever.com", 
+            password_hash=hash_password("mod123"),
+            role="mod"
+        )
+        mod_dict = mod_user.dict()
+        mod_dict = prepare_for_mongo(mod_dict)
+        await db.users.insert_one(mod_dict)
+        print("✅ Usuário mod padrão criado: mod@ever.com / mod123")
 
 # Endpoints de Autenticação
 @app.post("/api/auth/register")
