@@ -183,6 +183,7 @@ function App() {
     created_by: ''
   });
   const [redeemCode, setRedeemCode] = useState('');
+  const [adminActiveTab, setAdminActiveTab] = useState('overview'); // overview, users, giftcards
   const [adminData, setAdminData] = useState({
     totalUsers: 0,
     totalDeposits: {
