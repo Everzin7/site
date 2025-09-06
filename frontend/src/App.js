@@ -276,6 +276,13 @@ function App() {
   // Funções de autenticação
   const handleLogin = async (e) => {
     e.preventDefault();
+    
+    // Validação básica
+    if (!loginData.email || !loginData.password) {
+      showNotification('❌ Preencha email e senha', 'error');
+      return;
+    }
+
     try {
       const response = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
@@ -298,11 +305,19 @@ function App() {
         if (userData.role === 'admin') {
           loadAdminData();
         }
+      } else if (response.status === 401) {
+        showNotification('❌ Email ou senha incorretos', 'error');
       } else {
-        throw new Error('Credenciais inválidas');
+        const errorData = await response.json().catch(() => ({ detail: 'Erro no servidor' }));
+        showNotification('❌ Erro no login: ' + (errorData.detail || 'Erro desconhecido'), 'error');
       }
     } catch (error) {
-      showNotification('❌ Erro no login: ' + error.message, 'error');
+      console.error('Erro no login:', error);
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        showNotification('❌ Erro de conexão. Verifique sua internet e tente novamente.', 'error');
+      } else {
+        showNotification('❌ Erro no login: ' + error.message, 'error');
+      }
     }
   };
 
