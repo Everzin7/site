@@ -320,6 +320,8 @@ function App() {
       return;
     }
 
+    setIsLoading(true);
+    
     try {
       console.log('📧 Login com email:', loginData.email);
       console.log('🌐 URL completa:', `${API_BASE}/api/auth/login`);
@@ -366,6 +368,8 @@ function App() {
       } else {
         showNotification('❌ Erro no login: ' + error.message, 'error');
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
