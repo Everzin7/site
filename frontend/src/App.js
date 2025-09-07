@@ -371,6 +371,8 @@ function App() {
   const handleRegister = async (e) => {
     e.preventDefault();
     
+    console.log('📝 Tentativa de registro iniciada');
+    
     // Validações
     if (!registerData.name || !registerData.email || !registerData.password) {
       showNotification('❌ Preencha todos os campos', 'error');
@@ -390,14 +392,20 @@ function App() {
     }
     
     try {
-      const response = await fetch(`${API_BASE}/api/auth/register`, {
+      console.log('📧 Registro com email:', registerData.email);
+      console.log('🌐 URL completa:', `${API_BASE}/api/auth/register`);
+      
+      const response = await fetchWithRetry(`${API_BASE}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(registerData)
       });
       
+      console.log('📡 Response status:', response.status);
+      
       if (response.ok) {
         const userData = await response.json();
+        console.log('✅ Registro bem-sucedido:', userData.name);
         setUser(userData);
         localStorage.setItem('whatsapp_bot_user', JSON.stringify(userData));
         setBotConfig(prev => ({ ...prev, user_id: userData.id }));
@@ -406,15 +414,20 @@ function App() {
         setCurrentView('dashboard');
         loadDashboardData(userData.id);
       } else if (response.status === 400) {
+        console.log('❌ Erro de validação - 400');
         const errorData = await response.json().catch(() => ({ detail: 'Email já cadastrado' }));
         showNotification('❌ ' + (errorData.detail || 'Email já cadastrado'), 'error');
       } else {
+        console.log('❌ Erro no servidor:', response.status);
         const errorData = await response.json().catch(() => ({ detail: 'Erro no servidor' }));
         showNotification('❌ Erro no registro: ' + (errorData.detail || 'Erro desconhecido'), 'error');
       }
     } catch (error) {
-      console.error('Erro no registro:', error);
-      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      console.error('💥 Erro capturado no registro:', error);
+      
+      if (error.name === 'AbortError') {
+        showNotification('❌ Timeout na conexão. Tente novamente.', 'error');
+      } else if (error.message.includes('fetch') || error.message.includes('Failed to fetch')) {
         showNotification('❌ Erro de conexão. Verifique sua internet e tente novamente.', 'error');
       } else {
         showNotification('❌ Erro no registro: ' + error.message, 'error');
