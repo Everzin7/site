@@ -81,3 +81,11 @@ android-sdk/ -e
 # Environment files
 *.env
 *.env.*
+
+# Project specific logs
+backend/debug.log
+backend/server.log
+backend/nohup.out
+debug.log
+server.log
+nohup.out
