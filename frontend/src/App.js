@@ -1251,7 +1251,7 @@ function App() {
     );
   };
 
-  // Componente de Registro - Corrigido para manter foco
+  // Componente de Registro - Corrigido para manter foco  
   const RegisterModal = () => {
     const [localRegisterData, setLocalRegisterData] = useState({
       name: '',
@@ -1262,20 +1262,43 @@ function App() {
 
     const handleSubmit = async (e) => {
       e.preventDefault();
+      
+      // Validações
+      if (!localRegisterData.name || !localRegisterData.email || !localRegisterData.password) {
+        showNotification('❌ Preencha todos os campos', 'error');
+        return;
+      }
+      
       if (localRegisterData.password.length < 6) {
         showNotification('❌ Senha deve ter pelo menos 6 caracteres', 'error');
         return;
       }
+
+      // Validação básica de email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(localRegisterData.email)) {
+        showNotification('❌ Email inválido', 'error');
+        return;
+      }
+      
+      setIsLoading(true);
       
       try {
-        const response = await fetch(`${API_BASE}/api/auth/register`, {
+        console.log('📝 Registro modal - tentativa iniciada');
+        console.log('📧 Email:', localRegisterData.email);
+        console.log('🌐 URL:', `${API_BASE}/api/auth/register`);
+        
+        const response = await fetchWithRetry(`${API_BASE}/api/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(localRegisterData)
         });
         
+        console.log('📡 Response status:', response.status);
+        
         if (response.ok) {
           const userData = await response.json();
+          console.log('✅ Registro bem-sucedido:', userData.name);
           setUser(userData);
           localStorage.setItem('whatsapp_bot_user', JSON.stringify(userData));
           setBotConfig(prev => ({ ...prev, user_id: userData.id }));
@@ -1283,12 +1306,27 @@ function App() {
           showNotification('✅ Conta criada e login automático realizado!', 'success');
           setCurrentView('dashboard');
           loadDashboardData(userData.id);
+        } else if (response.status === 400) {
+          console.log('❌ Erro de validação - 400');
+          const errorData = await response.json().catch(() => ({ detail: 'Email já cadastrado' }));
+          showNotification('❌ ' + (errorData.detail || 'Email já cadastrado'), 'error');
         } else {
-          const errorData = await response.json();
-          throw new Error(errorData.detail || 'Erro ao criar conta');
+          console.log('❌ Erro no servidor:', response.status);
+          const errorData = await response.json().catch(() => ({ detail: 'Erro no servidor' }));
+          showNotification('❌ Erro no registro: ' + (errorData.detail || 'Erro desconhecido'), 'error');
         }
       } catch (error) {
-        showNotification('❌ Erro no registro: ' + error.message, 'error');
+        console.error('💥 Erro capturado no registro modal:', error);
+        
+        if (error.name === 'AbortError') {
+          showNotification('❌ Timeout na conexão. Tente novamente.', 'error');
+        } else if (error.message.includes('fetch') || error.message.includes('Failed to fetch')) {
+          showNotification('❌ Erro de conexão. Verifique sua internet e tente novamente.', 'error');
+        } else {
+          showNotification('❌ Erro no registro: ' + error.message, 'error');
+        }
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -1342,8 +1380,21 @@ function App() {
                 autoComplete="off"
               />
             </div>
-            <button type="submit" className="futuristic-btn-main w-full">
-              Criar Conta
+            <button 
+              type="submit" 
+              disabled={isLoading}
+              className={`futuristic-btn-main w-full flex items-center justify-center space-x-2 ${
+                isLoading ? 'opacity-75 cursor-not-allowed' : ''
+              }`}
+            >
+              {isLoading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  <span>Criando...</span>
+                </>
+              ) : (
+                <span>Criar Conta</span>
+              )}
             </button>
           </form>
           <div className="text-center mt-4">
