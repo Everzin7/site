@@ -1139,14 +1139,7 @@ function App() {
         }
       } catch (error) {
         console.error('💥 Erro capturado no login modal:', error);
-        
-        if (error.name === 'AbortError') {
-          showNotification('❌ Timeout na conexão. Tente novamente.', 'error');
-        } else if (error.message.includes('fetch') || error.message.includes('Failed to fetch')) {
-          showNotification('❌ Erro de conexão. Verifique sua internet e tente novamente.', 'error');
-        } else {
-          showNotification('❌ Erro no login: ' + error.message, 'error');
-        }
+        showNotification('❌ Erro no login. Tente novamente.', 'error');
       } finally {
         setIsLoading(false);
       }
