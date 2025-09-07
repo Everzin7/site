@@ -1274,7 +1274,7 @@ function App() {
         console.log('📧 Email:', localRegisterData.email);
         console.log('🌐 URL:', `${API_BASE}/api/auth/register`);
         
-        const response = await fetchWithRetry(`${API_BASE}/api/auth/register`, {
+        const response = await makeRequest(`${API_BASE}/api/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(localRegisterData)
