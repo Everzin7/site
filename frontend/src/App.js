@@ -396,6 +396,8 @@ function App() {
       return;
     }
     
+    setIsLoading(true);
+    
     try {
       console.log('📧 Registro com email:', registerData.email);
       console.log('🌐 URL completa:', `${API_BASE}/api/auth/register`);
@@ -437,6 +439,8 @@ function App() {
       } else {
         showNotification('❌ Erro no registro: ' + error.message, 'error');
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
