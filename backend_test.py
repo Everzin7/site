@@ -346,8 +346,8 @@ Teclado Mecânico,Teclado mecânico para programadores,199.99,Periféricos,https
         print("\n🔍 Testing Admin Login...")
         
         login_data = {
-            "email": "adm@ever.com",
-            "password": "everto1n"
+            "email": "adm@adm.com",
+            "password": "adm123"
         }
         
         try:
@@ -370,7 +370,7 @@ Teclado Mecânico,Teclado mecânico para programadores,199.99,Periféricos,https
         print("\n🔍 Testing Mod Login...")
         
         login_data = {
-            "email": "mod@ever.com",
+            "email": "mod@mod.com",
             "password": "mod123"
         }
         

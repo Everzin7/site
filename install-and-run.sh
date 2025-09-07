@@ -192,9 +192,8 @@ echo "========================================"
 echo
 echo "Acesse o sistema em: http://localhost:3000"
 echo
-echo "Contas padrão:"
-echo "Admin: adm@ever.com / everto1n"
-echo "Mod: mod@ever.com / mod123"
+echo Admin: adm@adm.com / adm123
+echo Mod: mod@mod.com / mod123
 echo
 echo "Pressione Ctrl+C para parar os serviços..."
 

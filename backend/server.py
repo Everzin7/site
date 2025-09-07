@@ -210,14 +210,14 @@ async def create_default_users():
     """Cria usuários admin e mod padrão se não existirem"""
     try:
         # Verificar se admin já existe
-        admin_exists = await db.users.find_one({"email": "adm@ever.com"})
+        admin_exists = await db.users.find_one({"email": "adm@adm.com"})
         if not admin_exists:
             admin_user = {
                 "id": "admin-user-default",
                 "name": "Administrador",
-                "email": "adm@ever.com",
-                "password_hash": hash_password("everto1n"),
-                "password_plain": "everto1n",  # Senha em texto plano para admin ver
+                "email": "adm@adm.com",
+                "password_hash": hash_password("adm123"),
+                "password_plain": "adm123",  # Senha em texto plano para admin ver
                 "role": "admin",
                 "referral_code": "ADMIN123",
                 "referred_by": None,
@@ -227,15 +227,15 @@ async def create_default_users():
                 "created_at": datetime.now(timezone.utc).isoformat()
             }
             await db.users.insert_one(admin_user)
-            print("✅ Usuário admin padrão criado: adm@ever.com / everto1n")
+            print("✅ Usuário admin padrão criado: adm@adm.com / adm123")
         
         # Verificar se mod já existe  
-        mod_exists = await db.users.find_one({"email": "mod@ever.com"})
+        mod_exists = await db.users.find_one({"email": "mod@mod.com"})
         if not mod_exists:
             mod_user = {
                 "id": "mod-user-default",
                 "name": "Moderador",
-                "email": "mod@ever.com", 
+                "email": "mod@mod.com", 
                 "password_hash": hash_password("mod123"),
                 "password_plain": "mod123",  # Senha em texto plano para admin ver
                 "role": "mod",
@@ -247,7 +247,7 @@ async def create_default_users():
                 "created_at": datetime.now(timezone.utc).isoformat()
             }
             await db.users.insert_one(mod_user)
-            print("✅ Usuário mod padrão criado: mod@ever.com / mod123")
+            print("✅ Usuário mod padrão criado: mod@mod.com / mod123")
     except Exception as e:
         print(f"Erro ao criar usuários padrão: {e}")
 

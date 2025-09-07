@@ -102,8 +102,8 @@ echo.
 echo Acesse o sistema em: http://localhost:3000
 echo.
 echo Contas padrao:
-echo Admin: adm@ever.com / everto1n
-echo Mod: mod@ever.com / mod123
+echo Admin: adm@adm.com / adm123
+echo Mod: mod@mod.com / mod123
 echo.
 echo Pressione qualquer tecla para fechar...
 pause >nul

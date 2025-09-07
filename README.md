@@ -86,8 +86,8 @@ npm start
 - **Documentação da API**: http://localhost:8000/docs
 
 ### Credenciais de Administrador
-- **Usuário**: admin
-- **Senha**: admin123
+- **Email**: adm@adm.com
+- **Senha**: adm123
 
 ## 📂 Estrutura Refatorada
 
@@ -267,12 +267,12 @@ npm start
 O sistema cria automaticamente as seguintes contas:
 
 ### Administrador
-- **Email:** adm@ever.com
-- **Senha:** everto1n
+- **Email:** adm@adm.com
+- **Senha:** adm123
 - **Acesso:** Completo ao sistema
 
 ### Moderador  
-- **Email:** mod@ever.com
+- **Email:** mod@mod.com
 - **Senha:** mod123
 - **Acesso:** Moderação de usuários
 
