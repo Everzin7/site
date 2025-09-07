@@ -1120,24 +1120,64 @@ function App() {
     const handleSubmit = async (e) => {
       e.preventDefault();
       
-      // Atualizar os dados globais e chamar a função principal
-      setLoginData(localLoginData);
+      // Validação básica
+      if (!localLoginData.email || !localLoginData.password) {
+        showNotification('❌ Preencha email e senha', 'error');
+        return;
+      }
+
+      setIsLoading(true);
       
-      // Simular o evento com os dados locais
-      const fakeEvent = {
-        preventDefault: () => {},
-        target: { elements: {} }
-      };
-      
-      // Criar um override temporário para usar dados locais
-      const originalLoginData = loginData;
-      setLoginData(localLoginData);
-      
-      // Aguardar um pouco para o estado atualizar e chamar a função principal
-      setTimeout(async () => {
-        await handleLogin(fakeEvent);
-        setLoginData(originalLoginData); // Restaurar dados originais
-      }, 0);
+      try {
+        console.log('🔐 Login modal - tentativa iniciada');
+        console.log('📧 Email:', localLoginData.email);
+        console.log('🌐 URL:', `${API_BASE}/api/auth/login`);
+        
+        const response = await fetchWithRetry(`${API_BASE}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(localLoginData)
+        });
+        
+        console.log('📡 Response status:', response.status);
+        
+        if (response.ok) {
+          const userData = await response.json();
+          console.log('✅ Login bem-sucedido:', userData.name);
+          setUser(userData);
+          localStorage.setItem('whatsapp_bot_user', JSON.stringify(userData));
+          setBotConfig(prev => ({ ...prev, user_id: userData.id }));
+          setShowLogin(false);
+          showNotification('✅ Login realizado com sucesso!', 'success');
+          setCurrentView('dashboard');
+          loadUserBots(userData.id);
+          loadDashboardData(userData.id);
+          
+          // Carregar dados de admin se for admin
+          if (userData.role === 'admin') {
+            loadAdminData();
+          }
+        } else if (response.status === 401) {
+          console.log('❌ Login inválido - 401');
+          showNotification('❌ Email ou senha incorretos', 'error');
+        } else {
+          console.log('❌ Erro no servidor:', response.status);
+          const errorData = await response.json().catch(() => ({ detail: 'Erro no servidor' }));
+          showNotification('❌ Erro no login: ' + (errorData.detail || 'Erro desconhecido'), 'error');
+        }
+      } catch (error) {
+        console.error('💥 Erro capturado no login modal:', error);
+        
+        if (error.name === 'AbortError') {
+          showNotification('❌ Timeout na conexão. Tente novamente.', 'error');
+        } else if (error.message.includes('fetch') || error.message.includes('Failed to fetch')) {
+          showNotification('❌ Erro de conexão. Verifique sua internet e tente novamente.', 'error');
+        } else {
+          showNotification('❌ Erro no login: ' + error.message, 'error');
+        }
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     return (
