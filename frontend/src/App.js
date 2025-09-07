@@ -274,33 +274,22 @@ function App() {
     }
   }, [user]);
 
-  // Função auxiliar para fazer requests com retry
-  const fetchWithRetry = async (url, options, maxRetries = 3) => {
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-      try {
-        console.log(`🌐 Tentativa ${attempt}/${maxRetries} para ${url}`);
-        
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
-        
-        const response = await fetch(url, { 
-          ...options, 
-          signal: controller.signal 
-        });
-        
-        clearTimeout(timeoutId);
-        return response;
-        
-      } catch (error) {
-        console.log(`❌ Tentativa ${attempt} falhou:`, error.message);
-        
-        if (attempt === maxRetries) {
-          throw error;
-        }
-        
-        // Aguardar antes de tentar novamente
-        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
-      }
+  // Função auxiliar para fazer requests (versão simplificada e robusta)
+  const makeRequest = async (url, options) => {
+    try {
+      console.log(`🌐 Fazendo request para: ${url}`);
+      
+      const response = await fetch(url, {
+        ...options,
+        timeout: 15000 // 15 seconds timeout
+      });
+      
+      console.log(`📡 Response status: ${response.status}`);
+      return response;
+      
+    } catch (error) {
+      console.error(`❌ Erro na requisição:`, error);
+      throw error;
     }
   };
 
