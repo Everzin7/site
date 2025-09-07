@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
-const API_BASE = process.env.REACT_APP_BACKEND_URL || 'http://127.0.0.1:8000';
-console.log('🔧 API_BASE configurado como:', API_BASE);
-
-// Teste de conexão será executado após a inicialização do componente
+const API_BASE = process.env.REACT_APP_BACKEND_URL;
 
 // Ícones SVG personalizados mais sofisticados e menores
 const Icons = {
@@ -40,7 +37,7 @@ const Icons = {
   ),
   user: (
     <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
-      <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
+      <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z"/>
     </svg>
   ),
   dashboard: (
@@ -50,7 +47,7 @@ const Icons = {
   ),
   orders: (
     <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
-      <path d="M19,7H16V6A4,4 0 0,0 12,2A4,4 0 0,0 8,6V7H5A1,1 0 0,0 4,8V19A3,3 0 0,0 7,22H17A3,3 0 0,0 20,19V8A1,1 0 0,0 19,7M10,6A2,2 0 0,1 12,4A2,2 0 0,1 14,6V7H10V6M18,19A1,1 0 0,1 17,20H7A1,1 0 0,1 6,19V9H8V10A1,1 0 0,0 9,11A1,1 0 0,0 10,10V9H14V10A1,1 0 0,0 15,11A1,1 0 0,0 16,10V9H18V19Z"/>
+      <path d="M7 4V2C7 1.45 7.45 1 8 1H16C16.55 1 17 1.45 17 2V4H20C20.55 4 21 4.45 21 5S20.55 6 20 6H19V19C19 20.1 18.1 21 17 21H7C5.9 21 5 20.1 5 19V6H4C3.45 6 3 5.55 3 5S3.45 4 4 4H7ZM9 3V4H15V3H9ZM7 6V19H17V6H7Z"/>
     </svg>
   ),
   home: (
@@ -60,12 +57,12 @@ const Icons = {
   ),
   build: (
     <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
-      <path d="M22.7 19L13.6 9.9C14.5 7.6 14 4.9 12.1 3C10.1 1 7.1 0.6 4.7 1.7L9 6L6 9L1.6 4.7C0.4 7.1 0.9 10.1 2.9 12.1C4.8 14 7.5 14.5 9.8 13.6L18.9 22.7C19.3 23.1 19.9 23.1 20.3 22.7L22.6 20.4C23.1 20 23.1 19.3 22.7 19Z"/>
+      <path d="M22.7 19L13.6 9.9C14.5 7.6 14 4.9 12.1 3C10.1 1 7.1 1 5.1 3S3.1 7 5.1 9C7 10.9 9.8 11.4 12 10.5L21.1 19.6C21.5 20 22.3 20 22.7 19.6S23.1 19.4 22.7 19ZM7.5 7.5C6.7 6.7 6.7 5.5 7.5 4.7S9.3 3.9 10.1 4.7 10.9 6.5 10.1 7.3 8.3 8.1 7.5 7.5Z"/>
     </svg>
   ),
   phone: (
     <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
-      <path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/>
+      <path d="M17 1.01L7 1C5.9 1 5 1.9 5 3V21C5 22.1 5.9 23 7 23H17C18.1 23 19 22.1 19 21V3C19 1.9 18.1 1.01 17 1.01ZM17 19H7V5H17V19Z"/>
     </svg>
   ),
   chart: (
@@ -80,7 +77,7 @@ const Icons = {
   ),
   wallet: (
     <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
-      <path d="M21,18V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5A2,2 0 0,1 5,3H19A2,2 0 0,1 21,5V6H20A2,2 0 0,0 18,8V16A2,2 0 0,0 20,18M20,8V16H18V8H20Z"/>
+      <path d="M21 7.28V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V17.72C21.59 17.37 22 16.74 22 16V8C22 7.26 21.59 6.63 21 6.28ZM20 8V16H14V8H20ZM5 5H19V6H5V5ZM5 19V8H12V16H5V19Z"/>
     </svg>
   ),
   pix: (
@@ -103,25 +100,14 @@ const Icons = {
       <path d="M12 1L21 8V18C21 19.1 20.1 20 19 20H5C3.9 20 3 19.1 3 18V8L12 1ZM12 3.18L5 8.18V18H19V8.18L12 3.18ZM12 6C13.1 6 14 6.9 14 8S13.1 10 12 10 10 9.1 10 8 10.9 6 12 6ZM12 11.5C13.5 11.5 16 12.26 16 13.75V15H8V13.75C8 12.26 10.5 11.5 12 11.5Z"/>
     </svg>
   ),
-
+  gift: (
+    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
+      <path d="M22 12V20C22 21.1 21.1 22 20 22H4C2.9 22 2 21.1 2 20V12H22ZM15.5 7C16.3 7 17 6.3 17 5.5C17 4.7 16.3 4 15.5 4C14.7 4 14 4.7 14 5.5C14 6.3 14.7 7 15.5 7ZM8.5 7C9.3 7 10 6.3 10 5.5C10 4.7 9.3 4 8.5 4C7.7 4 7 4.7 7 5.5C7 6.3 7.7 7 8.5 7ZM12 8.5C10.4 8.5 8.5 9.4 8.5 10H10.5C10.5 9.4 11.4 9 12 9S13.5 9.4 13.5 10H15.5C15.5 9.4 13.6 8.5 12 8.5ZM22 10H13V12H22V10ZM11 10H2V12H11V10Z"/>
+    </svg>
+  ),
   shield: (
     <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
       <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1ZM12 7C13.1 7 14 7.9 14 9S13.1 11 12 11 10 10.1 10 9 10.9 7 12 7ZM12 17C10.33 17 8.9 16.16 8.17 14.89C8.27 13.55 10.33 12.83 12 12.83S15.73 13.55 15.83 14.89C15.1 16.16 13.67 17 12 17Z"/>
-    </svg>
-  ),
-  plus: (
-    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
-      <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
-    </svg>
-  ),
-  menu: (
-    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
-      <path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"/>
-    </svg>
-  ),
-  gift: (
-    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
-      <path d="M12,8A4,4 0 0,0 8,12V20A1,1 0 0,0 9,21H15A1,1 0 0,0 16,20V12A4,4 0 0,0 12,8M12,10A2,2 0 0,1 14,12V19H10V12A2,2 0 0,1 12,10M12,2A1,1 0 0,0 11,3V6H4A1,1 0 0,0 3,7V9A1,1 0 0,0 4,10H20A1,1 0 0,0 21,9V7A1,1 0 0,0 20,6H13V3A1,1 0 0,0 12,2Z"/>
     </svg>
   ),
 };
@@ -132,37 +118,6 @@ function App() {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  // Sistema de roteamento baseado na URL
-  useEffect(() => {
-    const path = window.location.pathname;
-    const routeMap = {
-      '/': 'home',
-      '/dashboard': 'dashboard',
-      '/carteira': 'wallet',
-      '/pedidos': 'orders',
-      '/referral': 'referral',
-      '/admin': 'admin',
-      '/criar-bot': 'bot-builder',
-      '/builder': 'builder',
-      '/simulator': 'simulator',
-      '/add-balance': 'add-balance',
-      '/pagamento': 'payment'
-    };
-    
-    const route = routeMap[path] || 'home';
-    navigateTo(route);
-
-    // Listener para mudanças na URL (botão voltar/avançar do navegador)
-    const handlePopState = () => {
-      const newPath = window.location.pathname;
-      const newRoute = routeMap[newPath] || 'home';
-      navigateTo(newRoute);
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
   
   // Estados para autenticação - corrigindo o bug do cursor
   const [loginData, setLoginData] = useState({ email: '', password: '' });
@@ -210,8 +165,12 @@ function App() {
   const [isTyping, setIsTyping] = useState(false);
   const [userBots, setUserBots] = useState([]);
   const [walletData, setWalletData] = useState({
-    balance: 0.00,
-    transactions: []
+    balance: 250.00,
+    transactions: [
+      { id: 1, type: 'deposit', amount: 100.00, method: 'PIX', status: 'completed', date: '2025-01-05T10:30:00Z', description: 'Recarga de saldo' },
+      { id: 2, type: 'referral', amount: 15.00, method: 'bonus', status: 'completed', date: '2025-01-04T15:20:00Z', description: 'Bônus de indicação' },
+      { id: 3, type: 'purchase', amount: -127.00, method: 'balance', status: 'completed', date: '2025-01-03T09:15:00Z', description: 'Compra Bot Premium' }
+    ]
   });
   const [addBalanceData, setAddBalanceData] = useState({
     amount: '',
@@ -225,22 +184,7 @@ function App() {
     created_by: ''
   });
   const [redeemCode, setRedeemCode] = useState('');
-  const [referralData, setReferralData] = useState({
-    referral_code: '',
-    total_referrals: 0,
-    total_earnings: 0,
-    referrals: [],
-    user_referral_earnings: 0
-  });
   const [adminActiveTab, setAdminActiveTab] = useState('overview'); // overview, users, giftcards
-  const [showCreateUser, setShowCreateUser] = useState(false);
-  const [createUserData, setCreateUserData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    referralCode: ''
-  });
-  const [ordersActiveTab, setOrdersActiveTab] = useState('pending'); // pending, completed
   const [adminData, setAdminData] = useState({
     totalUsers: 0,
     totalDeposits: {
@@ -253,11 +197,19 @@ function App() {
     allUsers: []
   });
   const [dashboardData, setDashboardData] = useState({
-    totalBots: 0,
-    activeBots: 0,
-    totalEarnings: 0.00,
-    referralEarnings: 0.00,
-    monthlyStats: []
+    totalBots: 12,
+    activeBots: 8,
+    totalEarnings: 2450.50,
+    referralEarnings: 245.00,
+    monthlyStats: [
+      { month: "Jan", value: 65, sales: 1200, coffee: 800 },
+      { month: "Fev", value: 45, sales: 900, coffee: 600 },
+      { month: "Mar", value: 78, sales: 1500, coffee: 1000 },
+      { month: "Abr", value: 52, sales: 1100, coffee: 700 },
+      { month: "Mai", value: 89, sales: 1800, coffee: 1200 },
+      { month: "Jun", value: 67, sales: 1350, coffee: 900 },
+      { month: "Jul", value: 95, sales: 2000, coffee: 1400 }
+    ]
   });
 
   const parallaxRef = useRef(null);
@@ -311,31 +263,7 @@ function App() {
       setBotConfig(prev => ({ ...prev, user_id: userData.id }));
       loadUserBots(userData.id);
       loadDashboardData(userData.id);
-      
-      // Carregar saldo real do usuário
-      setTimeout(() => {
-        loadUserProfile();
-      }, 100); // Pequeno delay para garantir que o setUser foi processado
     }
-  }, []);
-
-  // Testar conexão com backend na inicialização
-  useEffect(() => {
-    const testConnection = async () => {
-      try {
-        console.log('🧪 Testando conexão com backend...');
-        const response = await fetch(`${API_BASE}/api/health`);
-        if (response.ok) {
-          const data = await response.json();
-          console.log('✅ Backend conectado:', data);
-        } else {
-          console.error('❌ Backend erro:', response.status);
-        }
-      } catch (error) {
-        console.error('❌ Erro conexão:', error);
-      }
-    };
-    testConnection();
   }, []);
 
   // Criar bot inicial
@@ -346,62 +274,21 @@ function App() {
     }
   }, [user]);
 
-  // Carregar dados de referência quando visualizar carteira
-  useEffect(() => {
-    if (currentView === 'wallet' && user) {
-      fetchReferralData();
-      loadUserProfile(); // Atualizar saldo sempre que acessar carteira
-      
-      // Refresh periódico para capturar novos bônus
-      const interval = setInterval(() => {
-        loadUserProfile();
-        fetchReferralData();
-      }, 10000); // A cada 10 segundos
-      
-      return () => clearInterval(interval);
-    }
-  }, [currentView, user]);
-
-  // Função para navegar entre páginas e atualizar URL
-  const navigateTo = (view) => {
-    const viewToPath = {
-      'home': '/',
-      'dashboard': '/dashboard',
-      'wallet': '/carteira',
-      'orders': '/pedidos',
-      'referral': '/referral',
-      'admin': '/admin',
-      'bot-builder': '/criar-bot',
-      'builder': '/builder',
-      'simulator': '/simulator',
-      'add-balance': '/add-balance',
-      'payment': '/pagamento'
-    };
-    
-    const path = viewToPath[view] || '/';
-    window.history.pushState({}, '', path);
-    setCurrentView(view);
-    console.log(`🔄 Navegando para: ${view} (${path})`);
-  };
-
-  // Função auxiliar para fazer requests
-  const makeRequest = async (url, options = {}) => {
+  // Função auxiliar para fazer requests (versão simplificada e robusta)
+  const makeRequest = async (url, options) => {
     try {
-      console.log(`🌐 Request: ${url}`);
+      console.log(`🌐 Fazendo request para: ${url}`);
       
       const response = await fetch(url, {
-        headers: {
-          'Content-Type': 'application/json',
-          ...options.headers
-        },
-        ...options
+        ...options,
+        timeout: 15000 // 15 seconds timeout
       });
       
-      console.log(`📡 Status: ${response.status}`);
+      console.log(`📡 Response status: ${response.status}`);
       return response;
       
     } catch (error) {
-      console.error(`❌ Request error:`, error);
+      console.error(`❌ Erro na requisição:`, error);
       throw error;
     }
   };
@@ -409,55 +296,64 @@ function App() {
   // Funções de autenticação
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log('🔐 Login iniciado');
     
+    console.log('🔐 Tentativa de login iniciada');
+    
+    // Validação básica
     if (!loginData.email || !loginData.password) {
-      showNotification('❌ Preencha todos os campos', 'error');
+      console.log('❌ Campos vazios');
+      showNotification('❌ Preencha email e senha', 'error');
       return;
     }
 
     setIsLoading(true);
     
     try {
-      console.log('📧 Email:', loginData.email);
+      console.log('📧 Login com email:', loginData.email);
+      console.log('🌐 URL completa:', `${API_BASE}/api/auth/login`);
       
-      const response = await fetch(`${API_BASE}/api/auth/login`, {
+      const response = await makeRequest(`${API_BASE}/api/auth/login`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(loginData)
       });
       
-      console.log('📡 Status:', response.status);
+      console.log('📡 Response status:', response.status);
       
       if (response.ok) {
         const userData = await response.json();
-        console.log('✅ Sucesso:', userData.name);
+        console.log('✅ Login bem-sucedido:', userData.name);
         setUser(userData);
         localStorage.setItem('whatsapp_bot_user', JSON.stringify(userData));
         setBotConfig(prev => ({ ...prev, user_id: userData.id }));
         setShowLogin(false);
         showNotification('✅ Login realizado com sucesso!', 'success');
-        navigateTo('dashboard');
+        setCurrentView('dashboard');
         loadUserBots(userData.id);
         loadDashboardData(userData.id);
-        
-        // Carregar saldo real do usuário
-        loadUserProfile();
         
         // Carregar dados de admin se for admin
         if (userData.role === 'admin') {
           loadAdminData();
         }
       } else if (response.status === 401) {
+        console.log('❌ Login inválido - 401');
         showNotification('❌ Email ou senha incorretos', 'error');
       } else {
-        showNotification('❌ Erro no servidor', 'error');
+        console.log('❌ Erro no servidor:', response.status);
+        const errorData = await response.json().catch(() => ({ detail: 'Erro no servidor' }));
+        showNotification('❌ Erro no login: ' + (errorData.detail || 'Erro desconhecido'), 'error');
       }
     } catch (error) {
-      console.error('❌ Erro:', error);
-      showNotification('❌ Erro de conexão. Verifique sua internet e tente novamente.', 'error');
+      console.error('💥 Erro capturado no login:', error);
+      
+      if (error.name === 'AbortError') {
+        showNotification('❌ Timeout na conexão. Tente novamente.', 'error');
+      } else if (error.message.includes('fetch') || error.message.includes('Failed to fetch')) {
+        showNotification('❌ Erro de conexão. Verifique sua internet e tente novamente.', 'error');
+      } else {
+        showNotification('❌ Erro no login: ' + error.message, 'error');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -492,7 +388,7 @@ function App() {
       console.log('📧 Registro com email:', registerData.email);
       console.log('🌐 URL completa:', `${API_BASE}/api/auth/register`);
       
-      const response = await fetch(`${API_BASE}/api/auth/register`, {
+      const response = await fetchWithRetry(`${API_BASE}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(registerData)
@@ -507,22 +403,9 @@ function App() {
         localStorage.setItem('whatsapp_bot_user', JSON.stringify(userData));
         setBotConfig(prev => ({ ...prev, user_id: userData.id }));
         setShowRegister(false);
-        
-        // Mensagem diferente se usou código de referência
-        if (registerData.referralCode) {
-          showNotification('✅ Conta criada! Seu indicador ganhou R$ 0,50 de bônus!', 'success');
-        } else {
-          showNotification('✅ Conta criada e login automático realizado!', 'success');
-        }
-        
-        navigateTo('dashboard');
+        showNotification('✅ Conta criada e login automático realizado!', 'success');
+        setCurrentView('dashboard');
         loadDashboardData(userData.id);
-        
-        // Carregar saldo real do usuário
-        loadUserProfile();
-        
-        // Limpar dados do formulário
-        setRegisterData({ name: '', email: '', password: '', referralCode: '' });
       } else if (response.status === 400) {
         console.log('❌ Erro de validação - 400');
         const errorData = await response.json().catch(() => ({ detail: 'Email já cadastrado' }));
@@ -550,7 +433,7 @@ function App() {
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem('whatsapp_bot_user');
-    navigateTo('home');
+    setCurrentView('home');
     setBotConfig({
       id: '',
       user_id: '',
@@ -652,463 +535,6 @@ function App() {
     }, 3000);
   };
 
-  // Função para pagamento com saldo
-  const payWithBalance = async () => {
-    const orderValue = 39.90; // Valor fixo do pedido
-    
-    if (!user) {
-      showNotification('❌ Faça login para realizar o pagamento', 'error');
-      return;
-    }
-
-    if (walletData.balance < orderValue) {
-      showNotification(`❌ Saldo insuficiente. Você tem R$ ${walletData.balance.toFixed(2)} e precisa de R$ ${orderValue.toFixed(2)}`, 'error');
-      return;
-    }
-
-    // Mostrar animação de processamento
-    showNotification('⏳ Processando pagamento com saldo...', 'info');
-
-    setTimeout(async () => {
-      try {
-        // Calcular novo saldo
-        const newBalance = walletData.balance - orderValue;
-        
-        // Atualizar saldo no backend (usando a rota de admin para atualizar o próprio saldo)
-        if (user && user.role === 'admin') {
-          const response = await fetch(`${API_BASE}/api/admin/users/${user.id}/balance?admin_user_id=${user.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ balance: newBalance })
-          });
-          
-          if (response.ok) {
-            // Atualizar saldo local após confirmação do backend
-            loadUserProfile();
-          }
-        }
-        
-        // Deduzir valor do saldo localmente (para resposta imediata)
-        setWalletData(prev => ({
-          ...prev,
-          balance: newBalance,
-          transactions: [
-            {
-              id: Date.now(),
-              type: 'purchase',
-              amount: -orderValue,
-              method: 'balance',
-              status: 'completed',
-              date: new Date().toISOString(),
-              description: 'Compra Bot Premium - Pagamento com Saldo'
-            },
-            ...prev.transactions
-          ]
-        }));
-
-        // Simular ativação do bot
-        showNotification('✅ Pagamento aprovado! Bot ativado com sucesso!', 'success');
-        
-        // Atualizar status do bot para ativo
-        if (botConfig && botConfig.id) {
-          const updatedBot = { ...botConfig, status: 'active' };
-          setBotConfig(updatedBot);
-          
-          // Atualizar na lista de bots do usuário
-          setUserBots(prevBots => 
-            prevBots.map(bot => 
-              bot.id === botConfig.id ? updatedBot : bot
-            )
-          );
-        }
-        
-        // Redirecionar para a aba de pedidos completos
-        setTimeout(() => {
-          navigateTo('orders');
-          setOrdersActiveTab('completed');
-        }, 1500);
-      } catch (error) {
-        console.error('Erro ao processar pagamento:', error);
-        showNotification('✅ Pagamento processado localmente! Bot ativado com sucesso!', 'success');
-        
-        // Mesmo com erro no backend, manter o fluxo local
-        setWalletData(prev => ({
-          ...prev,
-          balance: prev.balance - orderValue,
-          transactions: [
-            {
-              id: Date.now(),
-              type: 'purchase',
-              amount: -orderValue,
-              method: 'balance',
-              status: 'completed',
-              date: new Date().toISOString(),
-              description: 'Compra Bot Premium - Pagamento com Saldo'
-            },
-            ...prev.transactions
-          ]
-        }));
-        
-        setTimeout(() => {
-          navigateTo('orders');
-        }, 1500);
-      }
-    }, 2000); // 2 segundos de animação
-  };
-
-  // Função para gerar e baixar bot em Python
-  const downloadBot = async (bot) => {
-    try {
-      showNotification('⏳ Gerando seu bot em Python...', 'info');
-
-      // Gerar código Python do bot
-      const pythonCode = generatePythonBot(bot);
-      const readmeContent = generateReadme(bot);
-      const requirementsContent = generateRequirements();
-
-      // Criar arquivos em formato ZIP usando JSZip
-      const JSZip = (await import('jszip')).default;
-      const zip = new JSZip();
-
-      // Adicionar arquivos ao ZIP
-      zip.file('bot.py', pythonCode);
-      zip.file('README.md', readmeContent);
-      zip.file('requirements.txt', requirementsContent);
-      zip.file('config.json', JSON.stringify({
-        bot_name: bot.bot_name,
-        business_name: bot.business_info.name,
-        welcome_message: bot.welcome_message,
-        ai_enabled: bot.ai_enabled
-      }, null, 2));
-
-      // Gerar e baixar ZIP
-      const content = await zip.generateAsync({ type: 'blob' });
-      const url = window.URL.createObjectURL(content);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${bot.bot_name.replace(/\s+/g, '_').toLowerCase()}_bot.zip`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-
-      showNotification('✅ Bot baixado com sucesso!', 'success');
-    } catch (error) {
-      console.error('Erro ao gerar bot:', error);
-      showNotification('❌ Erro ao gerar o bot. Tente novamente.', 'error');
-    }
-  };
-
-  // Função para gerar código Python do bot
-  const generatePythonBot = (bot) => {
-    return `# -*- coding: utf-8 -*-
-"""
-Bot WhatsApp - ${bot.bot_name}
-Empresa: ${bot.business_info.name}
-Gerado automaticamente pelo WhatsApp Bot Builder
-"""
-
-import json
-import time
-import logging
-from datetime import datetime
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
-import google.generativeai as genai
-
-# Configuração do logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-
-class WhatsAppBot:
-    def __init__(self):
-        self.config = self.load_config()
-        self.driver = None
-        self.setup_ai()
-        
-    def load_config(self):
-        """Carrega configurações do arquivo config.json"""
-        try:
-            with open('config.json', 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except FileNotFoundError:
-            logger.error("Arquivo config.json não encontrado!")
-            return {}
-    
-    def setup_ai(self):
-        """Configura a IA se habilitada"""
-        if self.config.get('ai_enabled', False):
-            # CONFIGURE SUA API KEY DO GEMINI AQUI
-            # genai.configure(api_key="SUA_API_KEY_AQUI")
-            # self.model = genai.GenerativeModel('gemini-pro')
-            logger.info("IA habilitada - Configure sua API key do Gemini")
-        
-    def setup_driver(self):
-        """Configura o navegador Chrome"""
-        chrome_options = Options()
-        chrome_options.add_argument('--user-data-dir=./chrome_profile')
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--disable-dev-shm-usage')
-        
-        self.driver = webdriver.Chrome(options=chrome_options)
-        self.driver.get('https://web.whatsapp.com')
-        
-        logger.info("WhatsApp Web aberto. Escaneie o QR Code para conectar.")
-        input("Pressione Enter após escanear o QR Code...")
-        
-    def send_message(self, contact, message):
-        """Envia mensagem para um contato"""
-        try:
-            # Buscar contato
-            search_box = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, '//div[@contenteditable="true"][@data-tab="3"]'))
-            )
-            search_box.clear()
-            search_box.send_keys(contact)
-            time.sleep(2)
-            
-            # Clicar no contato
-            contact_element = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, f'//span[@title="{contact}"]'))
-            )
-            contact_element.click()
-            
-            # Digite e envie a mensagem
-            message_box = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, '//div[@contenteditable="true"][@data-tab="10"]'))
-            )
-            message_box.send_keys(message)
-            
-            # Clique no botão enviar
-            send_button = self.driver.find_element(By.XPATH, '//span[@data-icon="send"]')
-            send_button.click()
-            
-            logger.info(f"Mensagem enviada para {contact}: {message[:50]}...")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Erro ao enviar mensagem: {e}")
-            return False
-    
-    def process_message(self, message_text):
-        """Processa mensagem recebida e gera resposta"""
-        message_lower = message_text.lower().strip()
-        
-        # Respostas automáticas baseadas nos botões configurados
-        responses = {
-${bot.buttons.map(button => `            '${button.text.toLowerCase()}': '''${button.response_message}''',`).join('\n')}
-        }
-        
-        # Verificar se a mensagem corresponde a algum botão
-        for key, response in responses.items():
-            if key in message_lower:
-                return response
-        
-        # Se IA estiver habilitada, usar para resposta personalizada
-        if self.config.get('ai_enabled', False):
-            try:
-                # Descomente e configure quando tiver a API key
-                # prompt = f"Você é um assistente da empresa {self.config.get('business_name', '')}. Responda de forma útil e profissional: {message_text}"
-                # response = self.model.generate_content(prompt)
-                # return response.text
-                pass
-            except Exception as e:
-                logger.error(f"Erro na IA: {e}")
-        
-        # Resposta padrão
-        return "${bot.welcome_message}"
-    
-    def monitor_messages(self):
-        """Monitora mensagens recebidas"""
-        logger.info("Iniciando monitoramento de mensagens...")
-        
-        last_message_count = 0
-        
-        while True:
-            try:
-                # Verificar mensagens não lidas
-                messages = self.driver.find_elements(By.XPATH, '//div[@class="_2AOIt"]')
-                
-                if len(messages) > last_message_count:
-                    logger.info("Nova mensagem detectada!")
-                    # Aqui você pode adicionar lógica para processar mensagens automaticamente
-                    last_message_count = len(messages)
-                
-                time.sleep(5)  # Verificar a cada 5 segundos
-                
-            except Exception as e:
-                logger.error(f"Erro no monitoramento: {e}")
-                time.sleep(10)
-    
-    def show_menu(self):
-        """Exibe menu interativo"""
-        print("\\n" + "="*50)
-        print(f"🤖 BOT WHATSAPP - {self.config.get('bot_name', 'Sem Nome')}")
-        print(f"🏢 Empresa: {self.config.get('business_name', 'Não informada')}")
-        print("="*50)
-        print("\\n📋 MENU DE OPÇÕES:")
-        print("1. Enviar mensagem manual")
-        print("2. Iniciar monitoramento automático")
-        print("3. Mostrar configurações")
-        print("4. Sair")
-        print("\\n" + "="*50)
-    
-    def run(self):
-        """Executa o bot"""
-        try:
-            self.setup_driver()
-            
-            while True:
-                self.show_menu()
-                choice = input("\\nEscolha uma opção (1-4): ").strip()
-                
-                if choice == '1':
-                    contact = input("Digite o nome do contato: ")
-                    message = input("Digite a mensagem: ")
-                    self.send_message(contact, message)
-                    
-                elif choice == '2':
-                    print("Iniciando monitoramento automático...")
-                    print("Pressione Ctrl+C para parar")
-                    self.monitor_messages()
-                    
-                elif choice == '3':
-                    print(f"\\n📊 CONFIGURAÇÕES ATUAIS:")
-                    print(f"Nome do Bot: {self.config.get('bot_name', 'N/A')}")
-                    print(f"Empresa: {self.config.get('business_name', 'N/A')}")
-                    print(f"IA Habilitada: {'Sim' if self.config.get('ai_enabled') else 'Não'}")
-                    print(f"Botões Configurados: ${bot.buttons.length}")
-                    
-                elif choice == '4':
-                    print("Encerrando bot...")
-                    break
-                    
-                else:
-                    print("Opção inválida!")
-                    
-        except KeyboardInterrupt:
-            print("\\nBot interrompido pelo usuário.")
-        except Exception as e:
-            logger.error(f"Erro fatal: {e}")
-        finally:
-            if self.driver:
-                self.driver.quit()
-
-if __name__ == "__main__":
-    bot = WhatsAppBot()
-    bot.run()
-`;
-  };
-
-  // Função para gerar README
-  const generateReadme = (bot) => {
-    return `# 🤖 ${bot.bot_name}
-
-Bot WhatsApp automatizado gerado pelo **WhatsApp Bot Builder**.
-
-## 📋 Sobre o Bot
-
-- **Nome:** ${bot.bot_name}
-- **Empresa:** ${bot.business_info.name}
-- **IA Habilitada:** ${bot.ai_enabled ? 'Sim' : 'Não'}
-- **Botões Configurados:** ${bot.buttons.length}
-- **Produtos Cadastrados:** ${bot.products.length}
-
-## 🚀 Como Executar
-
-### 1. Instalar Dependências
-
-\`\`\`bash
-pip install -r requirements.txt
-\`\`\`
-
-### 2. Configurar Chrome Driver
-
-1. Baixe o ChromeDriver compatível com sua versão do Chrome em: https://chromedriver.chromium.org/
-2. Adicione o ChromeDriver ao PATH do sistema ou coloque na pasta do bot
-
-### 3. Configurar IA (Opcional)
-
-Se a IA estiver habilitada, você precisa:
-1. Obter uma API key do Google Gemini: https://makersuite.google.com/app/apikey
-2. Editar o arquivo \`bot.py\` e adicionar sua API key na linha indicada
-
-### 4. Executar o Bot
-
-\`\`\`bash
-python bot.py
-\`\`\`
-
-## 📱 Como Usar
-
-1. **Primeira execução:** O bot abrirá o WhatsApp Web no Chrome
-2. **Escanear QR Code:** Use seu celular para escanear o código QR
-3. **Menu interativo:** Escolha uma das opções disponíveis:
-   - Enviar mensagem manual
-   - Monitoramento automático
-   - Ver configurações
-   - Sair
-
-## ⚙️ Configurações
-
-As configurações do bot estão no arquivo \`config.json\`:
-
-\`\`\`json
-{
-  "bot_name": "${bot.bot_name}",
-  "business_name": "${bot.business_info.name}",
-  "welcome_message": "${bot.welcome_message}",
-  "ai_enabled": ${bot.ai_enabled}
-}
-\`\`\`
-
-## 🔘 Respostas Automáticas
-
-O bot foi configurado com as seguintes respostas automáticas:
-
-${bot.buttons.map(button => `- **"${button.text}"** → ${button.response_message}`).join('\n')}
-
-## 📦 Produtos Cadastrados
-
-${bot.products.length > 0 ? bot.products.map(product => `- **${product.name}** - R$ ${product.price}`).join('\n') : 'Nenhum produto cadastrado'}
-
-## ⚠️ Importante
-
-- Mantenha o WhatsApp Web sempre logado
-- Não feche o navegador Chrome durante o uso
-- O bot funciona apenas com o WhatsApp Web aberto
-- Para uso comercial, verifique os termos de uso do WhatsApp
-
-## 🆘 Problemas Comuns
-
-1. **ChromeDriver não encontrado:** Baixe e configure o ChromeDriver
-2. **WhatsApp desconectado:** Reescaneie o QR Code
-3. **IA não funciona:** Configure a API key do Gemini
-4. **Mensagens não enviadas:** Verifique se o contato existe
-
-## 📞 Suporte
-
-Este bot foi gerado automaticamente. Para suporte técnico, entre em contato com o WhatsApp Bot Builder.
-
----
-**Gerado em:** ${new Date().toLocaleDateString('pt-BR')}
-**Versão:** 1.0.0
-`;
-  };
-
-  // Função para gerar requirements.txt
-  const generateRequirements = () => {
-    return `selenium==4.15.0
-google-generativeai==0.3.0
-webdriver-manager==4.0.1
-python-dotenv==1.0.0
-requests==2.31.0
-`;
-  };
-
   // Função separada para salvar e ir para pagamento
   const saveBotAndGoToPayment = async () => {
     if (!user) {
@@ -1127,7 +553,7 @@ requests==2.31.0
         const savedBot = await response.json();
         setBotConfig(savedBot);
         showNotification('✅ Bot salvo! Redirecionando para pagamento...', 'success');
-        navigateTo('payment');
+        setCurrentView('payment');
         loadUserBots(user.id);
         return true;
       } else {
@@ -1241,45 +667,6 @@ requests==2.31.0
     }
   };
 
-  // Função para buscar dados de referência
-  const fetchReferralData = async () => {
-    if (!user?.id) return;
-
-    try {
-      const response = await fetch(`${API_BASE}/api/referrals/${user.id}`);
-      if (response.ok) {
-        const data = await response.json();
-        setReferralData(data);
-      }
-    } catch (error) {
-      console.error('Erro ao buscar dados de referência:', error);
-    }
-  };
-
-  // Função para deletar bot pendente
-  const deleteBot = async (botId, botName) => {
-    if (!confirm(`Tem certeza que deseja deletar o bot "${botName}"? Esta ação não pode ser desfeita.`)) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`${API_BASE}/api/bots/${botId}`, {
-        method: 'DELETE'
-      });
-
-      if (response.ok) {
-        // Remover bot da lista local
-        setUserBots(prev => prev.filter(bot => bot.id !== botId));
-        showNotification('✅ Bot deletado com sucesso!', 'success');
-      } else {
-        throw new Error('Erro ao deletar bot');
-      }
-    } catch (error) {
-      console.error('Erro ao deletar bot:', error);
-      showNotification('❌ Erro ao deletar bot. Tente novamente.', 'error');
-    }
-  };
-
   // Função para banir usuário (admin/mod)
   const banUser = async (userId) => {
     if (!user || (user.role !== 'admin' && user.role !== 'mod')) {
@@ -1309,162 +696,6 @@ requests==2.31.0
       showNotification('❌ ' + error.message, 'error');
     }
   };
-
-  // Função para desbanir usuário (admin/mod)
-  const unbanUser = async (userId) => {
-    if (!user || (user.role !== 'admin' && user.role !== 'mod')) {
-      showNotification('❌ Sem permissão para desbanir usuários', 'error');
-      return;
-    }
-
-    try {
-      const response = await fetch(`${API_BASE}/api/admin/users/ban?admin_user_id=${user.id}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: userId, action: 'unban' })
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        showNotification('✅ ' + result.message, 'success');
-        if (user.role === 'admin') {
-          loadAdminData();
-        }
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Erro ao desbanir usuário');
-      }
-    } catch (error) {
-      showNotification('❌ ' + error.message, 'error');
-    }
-  };
-
-  // Função para atualizar saldo do usuário (apenas admin)
-  const updateUserBalance = async (userId, newBalance) => {
-    if (!user || user.role !== 'admin') {
-      showNotification('❌ Apenas administradores podem editar saldos', 'error');
-      return;
-    }
-
-    try {
-      const response = await fetch(`${API_BASE}/api/admin/users/${userId}/balance?admin_user_id=${user.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ balance: parseFloat(newBalance) })
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        showNotification('✅ Saldo atualizado com sucesso', 'success');
-        loadAdminData();
-        
-        // Se o admin editou o próprio saldo, atualizar o saldo local
-        if (userId === user.id) {
-          loadUserProfile();
-        }
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Erro ao atualizar saldo');
-      }
-    } catch (error) {
-      showNotification('❌ ' + error.message, 'error');
-    }
-  };
-
-  // Função para deletar usuário (apenas admin)
-  const deleteUser = async (userId) => {
-    if (!user || user.role !== 'admin') {
-      showNotification('❌ Apenas administradores podem deletar usuários', 'error');
-      return;
-    }
-
-    if (!confirm('Tem certeza que deseja deletar este usuário? Esta ação não pode ser desfeita.')) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`${API_BASE}/api/admin/users/${userId}?admin_user_id=${user.id}`, {
-        method: 'DELETE'
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        showNotification('✅ Usuário deletado com sucesso', 'success');
-        loadAdminData();
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Erro ao deletar usuário');
-      }
-    } catch (error) {
-      showNotification('❌ ' + error.message, 'error');
-    }
-  };
-
-  // Função para resetar saldos de todos os usuários (apenas admin)
-  const resetAllBalances = async () => {
-    if (!user || user.role !== 'admin') {
-      showNotification('❌ Apenas administradores podem resetar saldos', 'error');
-      return;
-    }
-
-    if (!confirm('Tem certeza que deseja zerar o saldo de TODOS os usuários? Esta ação não pode ser desfeita.')) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`${API_BASE}/api/admin/reset-balances?admin_user_id=${user.id}`, {
-        method: 'POST'
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        showNotification('✅ ' + result.message, 'success');
-        loadAdminData();
-        // Atualizar saldo do usuário logado se necessário
-        if (user) {
-          loadUserProfile();
-        }
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Erro ao resetar saldos');
-      }
-    } catch (error) {
-      showNotification('❌ ' + error.message, 'error');
-    }
-  };
-
-  // Função para carregar o perfil do usuário incluindo saldo real
-  const loadUserProfile = async () => {
-    if (!user || !user.id) return;
-
-    try {
-      const response = await fetch(`${API_BASE}/api/user/${user.id}/profile`);
-      if (response.ok) {
-        const userData = await response.json();
-        console.log('🔄 Atualizando perfil:', userData);
-        
-        // Atualizar walletData com saldo real do backend
-        setWalletData(prev => ({
-          ...prev,
-          balance: userData.balance
-        }));
-        
-        // Atualizar dados do usuário se necessário
-        setUser(prevUser => ({
-          ...prevUser,
-          balance: userData.balance,
-          referral_earnings: userData.referral_earnings || 0,
-          referral_code: userData.referral_code || prevUser.referral_code
-        }));
-        
-        console.log('✅ Saldo atualizado para:', userData.balance);
-      }
-    } catch (error) {
-      console.error('Erro ao carregar perfil do usuário:', error);
-    }
-  };
-
-
 
   // Função para carregar giftcards do admin
   const loadAdminGiftcards = async () => {
@@ -1868,153 +1099,6 @@ requests==2.31.0
     }
   };
 
-  // Componente para criar usuário (admin)
-  const CreateUserModal = () => {
-    const [localUserData, setLocalUserData] = useState({
-      name: '',
-      email: '',
-      password: '',
-      referralCode: '',
-      role: 'user'
-    });
-
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      
-      // Validações
-      if (!localUserData.name || !localUserData.email || !localUserData.password) {
-        showNotification('❌ Preencha todos os campos obrigatórios', 'error');
-        return;
-      }
-
-      if (localUserData.password.length < 6) {
-        showNotification('❌ Senha deve ter pelo menos 6 caracteres', 'error');
-        return;
-      }
-
-      // Validação básica de email
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(localUserData.email)) {
-        showNotification('❌ Email inválido', 'error');
-        return;
-      }
-
-      try {
-        const response = await fetch(`${API_BASE}/api/admin/users/create?admin_user_id=${user.id}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(localUserData)
-        });
-
-        if (response.ok) {
-          showNotification('✅ Usuário criado com sucesso!', 'success');
-          setShowCreateUser(false);
-          setLocalUserData({ name: '', email: '', password: '', referralCode: '', role: 'user' });
-          loadAdminData(); // Recarregar lista de usuários
-        } else {
-          const errorData = await response.json();
-          throw new Error(errorData.detail || 'Erro ao criar usuário');
-        }
-      } catch (error) {
-        showNotification('❌ ' + error.message, 'error');
-      }
-    };
-
-    return (
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-        <div className="bg-gray-900 rounded-2xl p-8 max-w-md w-full mx-4 border border-blue-500/20">
-          <div className="text-center mb-6">
-            <h3 className="text-2xl font-bold text-white mb-2">Criar Novo Usuário</h3>
-            <p className="text-gray-400">Preencha os dados do novo usuário</p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-gray-300 text-sm font-medium mb-2">Nome Completo</label>
-              <input
-                type="text"
-                value={localUserData.name}
-                onChange={(e) => setLocalUserData(prev => ({ ...prev, name: e.target.value }))}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Digite o nome completo"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-300 text-sm font-medium mb-2">Email</label>
-              <input
-                type="email"
-                value={localUserData.email}
-                onChange={(e) => setLocalUserData(prev => ({ ...prev, email: e.target.value }))}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Digite o email"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-300 text-sm font-medium mb-2">Senha</label>
-              <input
-                type="password"
-                value={localUserData.password}
-                onChange={(e) => setLocalUserData(prev => ({ ...prev, password: e.target.value }))}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Digite a senha (mín. 6 caracteres)"
-                required
-                minLength={6}
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-300 text-sm font-medium mb-2">Nível de Acesso</label>
-              <select
-                value={localUserData.role}
-                onChange={(e) => setLocalUserData(prev => ({ ...prev, role: e.target.value }))}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="user">👤 Usuário Normal</option>
-                <option value="mod">🛡️ Moderador</option>
-                <option value="admin">👑 Administrador</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-gray-300 text-sm font-medium mb-2">Código de Referência (Opcional)</label>
-              <input
-                type="text"
-                value={localUserData.referralCode}
-                onChange={(e) => setLocalUserData(prev => ({ ...prev, referralCode: e.target.value }))}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Código de referência (opcional)"
-              />
-            </div>
-
-            <div className="flex space-x-4 pt-4">
-              <button
-                type="button"
-                onClick={() => {
-                  setShowCreateUser(false);
-                  setLocalUserData({ name: '', email: '', password: '', referralCode: '', role: 'user' });
-                }}
-                className="flex-1 px-4 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-all"
-              >
-                Cancelar
-              </button>
-              <button
-                type="submit"
-                className="flex-1 px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all flex items-center justify-center space-x-2"
-              >
-                {Icons.plus}
-                <span>Criar Usuário</span>
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    );
-  };
-
   // Componente de Login - Corrigido para manter foco
   const LoginModal = () => {
     const [localLoginData, setLocalLoginData] = useState({ email: '', password: '' });
@@ -2035,7 +1119,7 @@ requests==2.31.0
         console.log('📧 Email:', localLoginData.email);
         console.log('🌐 URL:', `${API_BASE}/api/auth/login`);
         
-        const response = await fetch(`${API_BASE}/api/auth/login`, {
+        const response = await fetchWithRetry(`${API_BASE}/api/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(localLoginData)
@@ -2051,7 +1135,7 @@ requests==2.31.0
           setBotConfig(prev => ({ ...prev, user_id: userData.id }));
           setShowLogin(false);
           showNotification('✅ Login realizado com sucesso!', 'success');
-          navigateTo('dashboard');
+          setCurrentView('dashboard');
           loadUserBots(userData.id);
           loadDashboardData(userData.id);
           
@@ -2190,7 +1274,7 @@ requests==2.31.0
         console.log('📧 Email:', localRegisterData.email);
         console.log('🌐 URL:', `${API_BASE}/api/auth/register`);
         
-        const response = await fetch(`${API_BASE}/api/auth/register`, {
+        const response = await fetchWithRetry(`${API_BASE}/api/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(localRegisterData)
@@ -2205,22 +1289,9 @@ requests==2.31.0
           localStorage.setItem('whatsapp_bot_user', JSON.stringify(userData));
           setBotConfig(prev => ({ ...prev, user_id: userData.id }));
           setShowRegister(false);
-          
-          // Mensagem diferente se usou código de referência
-          if (localRegisterData.referralCode) {
-            showNotification('✅ Conta criada! Seu indicador ganhou R$ 0,50 de bônus!', 'success');
-          } else {
-            showNotification('✅ Conta criada e login automático realizado!', 'success');
-          }
-          
-          navigateTo('dashboard');
+          showNotification('✅ Conta criada e login automático realizado!', 'success');
+          setCurrentView('dashboard');
           loadDashboardData(userData.id);
-          
-          // Carregar saldo real do usuário
-          loadUserProfile();
-          
-          // Limpar dados do formulário
-          setLocalRegisterData({ name: '', email: '', password: '', referralCode: '' });
         } else if (response.status === 400) {
           console.log('❌ Erro de validação - 400');
           const errorData = await response.json().catch(() => ({ detail: 'Email já cadastrado' }));
@@ -2443,11 +1514,6 @@ requests==2.31.0
 
   return (
     <div className="min-h-screen bg-dark-theme relative overflow-hidden">
-      {/* Indicador de rota ativa - apenas para demonstração */}
-      <div className="fixed top-2 right-2 bg-black/70 px-3 py-1 rounded-lg text-xs z-50 border border-purple-500/30">
-        📍 {window.location.pathname}
-      </div>
-      
       {/* Background com parallax */}
       <div className="fixed inset-0 z-0">
         <div 
@@ -2509,7 +1575,7 @@ requests==2.31.0
                     ].map((item) => (
                       <button
                         key={item.id}
-                        onClick={() => navigateTo(item.id)}
+                        onClick={() => setCurrentView(item.id)}
                         className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-300 font-medium ${
                           currentView === item.id 
                             ? 'bg-gradient-to-r from-purple-500 to-cyan-500 text-white shadow-lg shadow-purple-500/50' 
@@ -2534,7 +1600,7 @@ requests==2.31.0
               ) : (
                 <>
                   <button
-                    onClick={() => navigateTo('home')}
+                    onClick={() => setCurrentView('home')}
                     className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-300 font-medium ${
                       currentView === 'home' 
                         ? 'bg-gradient-to-r from-purple-500 to-cyan-500 text-white shadow-lg shadow-purple-500/50' 
@@ -2589,7 +1655,7 @@ requests==2.31.0
                 
                 <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
                   <button 
-                    onClick={() => navigateTo('builder')}
+                    onClick={() => setCurrentView('builder')}
                     className="group px-10 py-5 bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-2xl text-xl font-bold hover:from-purple-600 hover:to-cyan-600 transform hover:scale-105 transition-all duration-300 shadow-2xl shadow-purple-500/50 hover:shadow-purple-500/70 flex items-center justify-center space-x-3"
                   >
                     {Icons.build}
@@ -2597,7 +1663,7 @@ requests==2.31.0
                     <span className="group-hover:translate-x-1 transition-transform">→</span>
                   </button>
                   <button 
-                    onClick={() => navigateTo('simulator')}
+                    onClick={() => setCurrentView('simulator')}
                     className="group px-10 py-5 bg-black/50 text-white rounded-2xl text-xl font-bold border-2 border-purple-500/50 hover:bg-purple-900/30 hover:border-purple-400 transform hover:scale-105 transition-all duration-300 backdrop-blur-sm flex items-center justify-center space-x-3"
                   >
                     {Icons.phone}
@@ -2678,7 +1744,7 @@ requests==2.31.0
                   Pronto para revolucionar seu atendimento?
                 </h2>
                 <button 
-                  onClick={() => navigateTo('builder')}
+                  onClick={() => setCurrentView('builder')}
                   className="px-12 py-6 bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-2xl text-2xl font-bold hover:from-purple-600 hover:to-cyan-600 transform hover:scale-105 transition-all duration-300 shadow-2xl shadow-purple-500/50 flex items-center justify-center space-x-3 mx-auto"
                 >
                   <span>Criar Meu Bot Agora</span>
@@ -2810,32 +1876,6 @@ requests==2.31.0
                           >
                             Banir
                           </button>
-                          <button
-                            onClick={() => unbanUser(user_item.id)}
-                            disabled={user_item.role === 'admin'}
-                            className="px-3 py-1 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                            Desbanir
-                          </button>
-                          <button
-                            onClick={() => {
-                              const newBalance = prompt('Novo saldo:', user_item.balance || '0');
-                              if (newBalance !== null) {
-                                updateUserBalance(user_item.id, newBalance);
-                              }
-                            }}
-                            disabled={user_item.role === 'admin'}
-                            className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                            Editar Saldo
-                          </button>
-                          <button
-                            onClick={() => deleteUser(user_item.id)}
-                            disabled={user_item.role === 'admin'}
-                            className="px-3 py-1 bg-red-600/20 text-red-300 rounded-lg hover:bg-red-600/30 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                            Deletar
-                          </button>
                         </div>
                       </div>
                     ))}
@@ -2852,24 +1892,15 @@ requests==2.31.0
                     {Icons.user}
                     <span>Todos os Usuários</span>
                   </h3>
-                  <div className="flex space-x-3">
-                    <button
-                      onClick={() => setShowCreateUser(true)}
-                      className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all flex items-center space-x-2"
-                    >
-                      {Icons.plus}
-                      <span>Criar Usuário</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        console.log('🔄 Carregando usuários manualmente...');
-                        loadAllUsers();
-                      }}
-                      className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all"
-                    >
-                      Recarregar
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => {
+                      console.log('🔄 Carregando usuários manualmente...');
+                      loadAllUsers();
+                    }}
+                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all"
+                  >
+                    Recarregar
+                  </button>
                 </div>
 
                 <div className="overflow-x-auto">
@@ -2913,39 +1944,13 @@ requests==2.31.0
                           </td>
                           <td className="py-3 px-4 text-gray-400 text-sm">{user_item.created_at}</td>
                           <td className="py-3 px-4">
-                            <div className="flex space-x-1">
+                            <div className="flex space-x-2">
                               <button
                                 onClick={() => banUser(user_item.id)}
                                 disabled={user_item.role === 'admin' || user_item.status === 'banned'}
                                 className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs hover:bg-red-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                               >
                                 Banir
-                              </button>
-                              <button
-                                onClick={() => unbanUser(user_item.id)}
-                                disabled={user_item.role === 'admin' || user_item.status === 'active'}
-                                className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs hover:bg-green-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                              >
-                                Desbanir
-                              </button>
-                              <button
-                                onClick={() => {
-                                  const newBalance = prompt('Novo saldo:', user_item.balance || '0');
-                                  if (newBalance !== null) {
-                                    updateUserBalance(user_item.id, newBalance);
-                                  }
-                                }}
-                                disabled={user_item.role === 'admin'}
-                                className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs hover:bg-blue-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                              >
-                                Editar
-                              </button>
-                              <button
-                                onClick={() => deleteUser(user_item.id)}
-                                disabled={user_item.role === 'admin'}
-                                className="px-2 py-1 bg-red-600/20 text-red-300 rounded text-xs hover:bg-red-600/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                              >
-                                Del
                               </button>
                             </div>
                           </td>
@@ -2970,22 +1975,6 @@ requests==2.31.0
                   {Icons.gift}
                   <span>Gerenciar Giftcards</span>
                 </h3>
-
-                {/* Ações Administrativas */}
-                <div className="mb-6 p-4 bg-red-900/20 rounded-xl border border-red-500/20">
-                  <h4 className="text-red-300 font-bold mb-4">⚠️ Ações Perigosas</h4>
-                  <div className="flex space-x-3">
-                    <button
-                      onClick={resetAllBalances}
-                      className="px-4 py-2 bg-red-600/20 text-red-300 rounded-lg hover:bg-red-600/30 transition-all font-medium"
-                    >
-                      💰 Resetar Todos os Saldos
-                    </button>
-                  </div>
-                  <p className="text-gray-400 text-sm mt-2">
-                    Esta ação irá zerar o saldo de todos os usuários permanentemente.
-                  </p>
-                </div>
 
                 {/* Criar Giftcard */}
                 <div className="mb-6 p-4 bg-yellow-900/20 rounded-xl border border-yellow-500/20">
@@ -3068,7 +2057,7 @@ requests==2.31.0
                   <h3 className="text-xl font-bold text-green-300 mb-2">Saldo Disponível</h3>
                   <p className="text-4xl font-bold text-white mb-4">R$ {walletData.balance.toFixed(2)}</p>
                   <button
-                    onClick={() => navigateTo('add-balance')}
+                    onClick={() => setCurrentView('add-balance')}
                     className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 rounded-xl font-bold hover:from-green-600 hover:to-emerald-700 transition-all flex items-center justify-center space-x-2 mb-3"
                   >
                     {Icons.add}
@@ -3108,7 +2097,7 @@ requests==2.31.0
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-gray-400 text-sm">Total Recarregado</p>
-                      <p className="text-2xl font-bold text-blue-400">R$ 0,00</p>
+                      <p className="text-2xl font-bold text-blue-400">R$ 350,00</p>
                     </div>
                     <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
                       {Icons.trending_up}
@@ -3120,7 +2109,7 @@ requests==2.31.0
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-gray-400 text-sm">Bônus Referência</p>
-                      <p className="text-2xl font-bold text-purple-400">R$ {user?.referral_earnings?.toFixed(2) || '0,00'}</p>
+                      <p className="text-2xl font-bold text-purple-400">R$ 45,00</p>
                     </div>
                     <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
                       {Icons.user}
@@ -3132,7 +2121,7 @@ requests==2.31.0
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-gray-400 text-sm">Total Gasto</p>
-                      <p className="text-2xl font-bold text-yellow-400">R$ 0,00</p>
+                      <p className="text-2xl font-bold text-yellow-400">R$ 254,00</p>
                     </div>
                     <div className="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center">
                       {Icons.credit_card}
@@ -3144,7 +2133,7 @@ requests==2.31.0
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-gray-400 text-sm">Economia</p>
-                      <p className="text-2xl font-bold text-cyan-400">0%</p>
+                      <p className="text-2xl font-bold text-cyan-400">15%</p>
                     </div>
                     <div className="w-12 h-12 bg-cyan-500/20 rounded-xl flex items-center justify-center">
                       {Icons.chart}
@@ -3202,106 +2191,6 @@ requests==2.31.0
                   </div>
                 ))}
               </div>
-            </div>
-
-            {/* Sistema de Referência */}
-            <div className="mt-8 bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/20">
-              <h3 className="text-xl font-bold text-white mb-6 flex items-center space-x-2">
-                {Icons.user}
-                <span>Sistema de Referência</span>
-                <span className="ml-2 text-sm bg-purple-500/20 text-purple-400 px-2 py-1 rounded-full">
-                  R$ 0,50 por referência
-                </span>
-              </h3>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* Meu Código de Referência */}
-                <div className="bg-black/30 rounded-xl p-4 border border-purple-500/10">
-                  <h4 className="text-white font-semibold mb-3 flex items-center space-x-2">
-                    {Icons.share}
-                    <span>Meu Código de Referência</span>
-                  </h4>
-                  <div className="bg-black/50 rounded-lg p-3 border border-purple-500/20">
-                    <p className="text-purple-400 font-mono text-lg text-center">
-                      {referralData.referral_code || user?.referral_code || 'Carregando...'}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => {
-                      const code = referralData.referral_code || user?.referral_code;
-                      if (code) {
-                        navigator.clipboard.writeText(code);
-                        showNotification('✅ Código copiado!', 'success');
-                      }
-                    }}
-                    className="w-full mt-3 bg-purple-500/20 text-purple-400 py-2 rounded-lg hover:bg-purple-500/30 transition-all flex items-center justify-center space-x-2"
-                  >
-                    {Icons.copy}
-                    <span>Copiar Código</span>
-                  </button>
-                </div>
-
-                {/* Estatísticas de Referência */}
-                <div className="space-y-4">
-                  <div className="bg-green-500/20 rounded-xl p-4 border border-green-500/20">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-green-400 text-sm">Pessoas Registradas</p>
-                        <p className="text-2xl font-bold text-white">{referralData.total_referrals}</p>
-                      </div>
-                      <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
-                        {Icons.user_add}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-purple-500/20 rounded-xl p-4 border border-purple-500/20">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-purple-400 text-sm">Ganhos por Referência</p>
-                        <p className="text-2xl font-bold text-white">R$ {referralData.user_referral_earnings?.toFixed(2) || '0,00'}</p>
-                      </div>
-                      <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                        {Icons.reward}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Lista de Referenciados */}
-              {referralData.referrals && referralData.referrals.length > 0 && (
-                <div className="mt-6">
-                  <h4 className="text-white font-semibold mb-4 flex items-center space-x-2">
-                    {Icons.users}
-                    <span>Pessoas que você indicou ({referralData.total_referrals})</span>
-                  </h4>
-                  <div className="space-y-2 max-h-60 overflow-y-auto">
-                    {referralData.referrals.map((referral, index) => (
-                      <div
-                        key={referral.id || index}
-                        className="flex items-center justify-between p-3 bg-black/30 rounded-lg border border-purple-500/10"
-                      >
-                        <div className="flex items-center space-x-3">
-                          <div className="w-8 h-8 bg-purple-500/20 rounded-full flex items-center justify-center text-purple-400 text-sm">
-                            {referral.name?.charAt(0).toUpperCase() || '?'}
-                          </div>
-                          <div>
-                            <p className="text-white font-medium text-sm">{referral.name}</p>
-                            <p className="text-gray-400 text-xs">Registrou em {referral.created_at}</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-green-400 font-bold text-sm">+R$ 0,50</p>
-                          <span className="text-xs px-2 py-1 rounded-full bg-green-500/20 text-green-400">
-                            Ativo
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         )}
@@ -3448,7 +2337,7 @@ requests==2.31.0
                   </div>
 
                   <button
-                    onClick={() => navigateTo('wallet')}
+                    onClick={() => setCurrentView('wallet')}
                     className="w-full p-3 border border-purple-500/50 text-purple-300 rounded-xl hover:bg-purple-800/30 transition-all"
                   >
                     Voltar para Carteira
@@ -3562,14 +2451,14 @@ requests==2.31.0
                 </h3>
                 <div className="space-y-4">
                   <button 
-                    onClick={() => navigateTo('builder')}
+                    onClick={() => setCurrentView('builder')}
                     className="w-full flex items-center space-x-3 p-4 bg-purple-500/20 rounded-xl hover:bg-purple-500/30 transition-all duration-300 hover:transform hover:scale-105 group"
                   >
                     {Icons.build}
                     <span className="text-white group-hover:text-purple-300">Criar Novo Bot</span>
                   </button>
                   <button 
-                    onClick={() => navigateTo('orders')}
+                    onClick={() => setCurrentView('orders')}
                     className="w-full flex items-center space-x-3 p-4 bg-cyan-500/20 rounded-xl hover:bg-cyan-500/30 transition-all duration-300 hover:transform hover:scale-105 group"
                   >
                     {Icons.orders}
@@ -3582,15 +2471,7 @@ requests==2.31.0
                     </p>
                     <div className="flex items-center justify-between">
                       <p className="text-white font-mono text-sm bg-black/30 px-3 py-1 rounded">{user.referral_code}</p>
-                      <button 
-                        onClick={() => {
-                          navigator.clipboard.writeText(user.referral_code);
-                          showNotification('✅ Código copiado!', 'success');
-                        }}
-                        className="text-green-400 hover:text-green-300 text-sm"
-                      >
-                        Copiar
-                      </button>
+                      <button className="text-green-400 hover:text-green-300 text-sm">Copiar</button>
                     </div>
                   </div>
                 </div>
@@ -3610,212 +2491,87 @@ requests==2.31.0
               <p className="text-gray-400">Gerencie seus bots e pendências de pagamento</p>
             </div>
 
-            {/* Tabs for Orders */}
-            <div className="mb-8">
-              <div className="flex space-x-1 bg-black/40 p-1 rounded-lg backdrop-blur-xl border border-purple-500/20">
-                {[
-                  { id: 'pending', label: 'Pendentes', icon: Icons.orders },
-                  { id: 'completed', label: 'Completos', icon: Icons.package }
-                ].map((tab) => (
-                  <button
-                    key={tab.id}
-                    onClick={() => setOrdersActiveTab(tab.id)}
-                    className={`flex-1 flex items-center justify-center space-x-2 px-6 py-3 rounded-md transition-all ${
-                      ordersActiveTab === tab.id 
-                        ? 'bg-gradient-to-r from-purple-500 to-cyan-500 text-white' 
-                        : 'text-gray-400 hover:text-white hover:bg-white/5'
-                    }`}
+            <div className="grid gap-6">
+              {userBots.map((bot) => (
+                <div key={bot.id} className="bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/20 hover:border-purple-400 transition-all duration-300">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-xl flex items-center justify-center">
+                        {Icons.robot}
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-white">{bot.bot_name}</h3>
+                        <p className="text-gray-400">{bot.business_info.name}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        bot.status === 'active' ? 'bg-green-500/20 text-green-400' :
+                        bot.status === 'pending_payment' ? 'bg-yellow-500/20 text-yellow-400' :
+                        'bg-gray-500/20 text-gray-400'
+                      }`}>
+                        {bot.status === 'active' ? 'Ativo' : 
+                         bot.status === 'pending_payment' ? 'Pendente Pagamento' : 'Rascunho'}
+                      </span>
+                      {bot.status === 'pending_payment' && (
+                        <button 
+                          onClick={() => {
+                            setBotConfig(bot);
+                            setCurrentView('payment');
+                          }}
+                          className="px-4 py-2 bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-lg hover:from-purple-600 hover:to-cyan-600 transition-all flex items-center space-x-2"
+                        >
+                          {Icons.credit_card}
+                          <span>Pagar Agora</span>
+                        </button>
+                      )}
+                      <button 
+                        onClick={() => {
+                          setBotConfig(bot);
+                          setCurrentView('builder');
+                        }}
+                        className="px-4 py-2 border border-purple-500/50 text-purple-300 rounded-lg hover:bg-purple-800/30 transition-all flex items-center space-x-2"
+                      >
+                        {Icons.build}
+                        <span>Editar</span>
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 grid grid-cols-3 gap-4">
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-purple-400">{bot.buttons.length}</p>
+                      <p className="text-gray-400 text-sm">Botões</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-cyan-400">{bot.products.length}</p>
+                      <p className="text-gray-400 text-sm">Produtos</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-green-400">{bot.ai_enabled ? 'Sim' : 'Não'}</p>
+                      <p className="text-gray-400 text-sm">IA Ativa</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              
+              {userBots.length === 0 && (
+                <div className="text-center py-16">
+                  <div className="w-24 h-24 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    {Icons.robot}
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-4">Nenhum bot criado ainda</h3>
+                  <p className="text-gray-400 mb-8">Crie seu primeiro bot para começar a automatizar suas vendas</p>
+                  <button 
+                    onClick={() => setCurrentView('builder')}
+                    className="px-8 py-4 bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-2xl font-bold hover:from-purple-600 hover:to-cyan-600 transition-all flex items-center space-x-3 mx-auto"
                   >
-                    {tab.icon}
-                    <span>{tab.label}</span>
+                    {Icons.build}
+                    <span>Criar Primeiro Bot</span>
                   </button>
-                ))}
-              </div>
+                </div>
+              )}
             </div>
-
-            {/* Pending Orders Tab */}
-            {ordersActiveTab === 'pending' && (
-              <div className="grid gap-6">
-                {userBots.filter(bot => bot.status === 'pending_payment' || bot.status === 'draft').map((bot) => (
-                  <div key={bot.id} className="bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/20 hover:border-purple-400 transition-all duration-300">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-xl flex items-center justify-center">
-                          {Icons.robot}
-                        </div>
-                        <div>
-                          <h3 className="text-xl font-bold text-white">{bot.bot_name}</h3>
-                          <p className="text-gray-400">{bot.business_info.name}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          bot.status === 'pending_payment' ? 'bg-yellow-500/20 text-yellow-400' :
-                          'bg-gray-500/20 text-gray-400'
-                        }`}>
-                          {bot.status === 'pending_payment' ? 'Pendente Pagamento' : 'Rascunho'}
-                        </span>
-                        {bot.status === 'pending_payment' && (
-                          <button 
-                            onClick={() => {
-                              setBotConfig(bot);
-                              navigateTo('payment');
-                            }}
-                            className="px-4 py-2 bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-lg hover:from-purple-600 hover:to-cyan-600 transition-all flex items-center space-x-2"
-                          >
-                            {Icons.credit_card}
-                            <span>Pagar Agora</span>
-                          </button>
-                        )}
-                        <button 
-                          onClick={() => {
-                            setBotConfig(bot);
-                            navigateTo('builder');
-                          }}
-                          className="px-4 py-2 border border-purple-500/50 text-purple-300 rounded-lg hover:bg-purple-800/30 transition-all flex items-center space-x-2"
-                        >
-                          {Icons.build}
-                          <span>Editar</span>
-                        </button>
-                        <button 
-                          onClick={() => deleteBot(bot.id, bot.bot_name)}
-                          className="px-4 py-2 border border-red-500/50 text-red-400 rounded-lg hover:bg-red-800/30 transition-all flex items-center space-x-2"
-                          title="Deletar bot permanentemente"
-                        >
-                          <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current">
-                            <path d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6Z"/>
-                          </svg>
-                          <span>Deletar</span>
-                        </button>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-4 grid grid-cols-3 gap-4">
-                      <div className="text-center">
-                        <p className="text-2xl font-bold text-purple-400">{bot.buttons.length}</p>
-                        <p className="text-gray-400 text-sm">Botões</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-2xl font-bold text-cyan-400">{bot.products.length}</p>
-                        <p className="text-gray-400 text-sm">Produtos</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-2xl font-bold text-green-400">{bot.ai_enabled ? 'Sim' : 'Não'}</p>
-                        <p className="text-gray-400 text-sm">IA Ativa</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                
-                {userBots.filter(bot => bot.status === 'pending_payment' || bot.status === 'draft').length === 0 && (
-                  <div className="text-center py-16">
-                    <div className="w-24 h-24 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                      {Icons.orders}
-                    </div>
-                    <h3 className="text-2xl font-bold text-white mb-4">Nenhum pedido pendente</h3>
-                    <p className="text-gray-400 mb-8">Todos os seus bots estão ativos ou você ainda não criou nenhum</p>
-                    <button 
-                      onClick={() => navigateTo('builder')}
-                      className="px-8 py-4 bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-2xl font-bold hover:from-purple-600 hover:to-cyan-600 transition-all flex items-center space-x-3 mx-auto"
-                    >
-                      {Icons.build}
-                      <span>Criar Novo Bot</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Completed Orders Tab */}
-            {ordersActiveTab === 'completed' && (
-              <div className="grid gap-6">
-                {userBots.filter(bot => bot.status === 'active').map((bot) => (
-                  <div key={bot.id} className="bg-black/40 backdrop-blur-xl rounded-2xl p-6 border border-green-500/20 hover:border-green-400 transition-all duration-300">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
-                          {Icons.robot}
-                        </div>
-                        <div>
-                          <h3 className="text-xl font-bold text-white">{bot.bot_name}</h3>
-                          <p className="text-gray-400">{bot.business_info.name}</p>
-                          <span className="inline-block px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium mt-2">
-                            ✅ Bot Ativo
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-4">
-                        <button 
-                          onClick={() => downloadBot(bot)}
-                          className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all flex items-center space-x-2"
-                        >
-                          <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
-                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                          </svg>
-                          <span>Download Bot</span>
-                        </button>
-                        <button 
-                          onClick={() => {
-                            setBotConfig(bot);
-                            navigateTo('builder');
-                          }}
-                          className="px-4 py-2 border border-green-500/50 text-green-300 rounded-lg hover:bg-green-800/30 transition-all flex items-center space-x-2"
-                        >
-                          {Icons.build}
-                          <span>Editar</span>
-                        </button>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-4 grid grid-cols-4 gap-4">
-                      <div className="text-center">
-                        <p className="text-2xl font-bold text-purple-400">{bot.buttons.length}</p>
-                        <p className="text-gray-400 text-sm">Botões</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-2xl font-bold text-cyan-400">{bot.products.length}</p>
-                        <p className="text-gray-400 text-sm">Produtos</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-2xl font-bold text-green-400">{bot.ai_enabled ? 'Sim' : 'Não'}</p>
-                        <p className="text-gray-400 text-sm">IA Ativa</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-2xl font-bold text-yellow-400">Python</p>
-                        <p className="text-gray-400 text-sm">Linguagem</p>
-                      </div>
-                    </div>
-
-                    <div className="mt-4 p-4 bg-green-900/20 rounded-lg border border-green-500/20">
-                      <h4 className="text-sm font-medium text-green-400 mb-2">📦 Conteúdo do Download:</h4>
-                      <div className="text-xs text-gray-400 space-y-1">
-                        <div>• <strong>bot.py</strong> - Código principal do bot em Python</div>
-                        <div>• <strong>config.json</strong> - Configurações personalizadas</div>
-                        <div>• <strong>README.md</strong> - Instruções completas de instalação</div>
-                        <div>• <strong>requirements.txt</strong> - Dependências do Python</div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                
-                {userBots.filter(bot => bot.status === 'active').length === 0 && (
-                  <div className="text-center py-16">
-                    <div className="w-24 h-24 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                      {Icons.package}
-                    </div>
-                    <h3 className="text-2xl font-bold text-white mb-4">Nenhum bot ativo ainda</h3>
-                    <p className="text-gray-400 mb-8">Complete o pagamento de seus bots para poder baixá-los</p>
-                    <button 
-                      onClick={() => setOrdersActiveTab('pending')}
-                      className="px-8 py-4 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-2xl font-bold hover:from-yellow-600 hover:to-orange-600 transition-all flex items-center space-x-3 mx-auto"
-                    >
-                      {Icons.orders}
-                      <span>Ver Pedidos Pendentes</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         )}
 
@@ -4297,38 +3053,12 @@ requests==2.31.0
                     <hr className="border-purple-500/20" />
                     <div className="flex justify-between text-xl font-bold">
                       <span className="text-white">Total</span>
-                      <span className="text-cyan-400">R$ 39,90</span>
+                      <span className="text-cyan-400">R$ 127,00</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-4">
-                  <div className="bg-cyan-900/20 p-4 rounded-xl border border-cyan-500/20 mb-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-300">Seu saldo disponível:</span>
-                      <span className="text-cyan-400 font-bold text-lg">R$ {walletData.balance.toFixed(2)}</span>
-                    </div>
-                  </div>
-                  
-                  <button 
-                    onClick={payWithBalance}
-                    className={`w-full p-4 rounded-xl font-bold transition-all flex items-center justify-center space-x-2 ${
-                      walletData.balance >= 39.90 
-                        ? 'bg-gradient-to-r from-cyan-500 to-cyan-600 text-white hover:from-cyan-600 hover:to-cyan-700' 
-                        : 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                    }`}
-                    disabled={walletData.balance < 39.90}
-                  >
-                    {Icons.wallet}
-                    <span>{walletData.balance >= 39.90 ? 'Pagar com Saldo' : 'Saldo Insuficiente'}</span>
-                  </button>
-                  
-                  <div className="flex items-center space-x-3 my-4">
-                    <div className="flex-1 h-px bg-purple-500/20"></div>
-                    <span className="text-gray-400 text-sm">ou pague com</span>
-                    <div className="flex-1 h-px bg-purple-500/20"></div>
-                  </div>
-                  
                   <button className="w-full p-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-bold hover:from-green-600 hover:to-green-700 transition-all flex items-center justify-center space-x-2">
                     {Icons.credit_card}
                     <span>Pagar com PIX</span>
@@ -4338,7 +3068,7 @@ requests==2.31.0
                     <span>Cartão de Crédito</span>
                   </button>
                   <button 
-                    onClick={() => navigateTo('orders')}
+                    onClick={() => setCurrentView('orders')}
                     className="w-full p-4 border border-purple-500/50 text-purple-300 rounded-xl font-bold hover:bg-purple-800/30 transition-all"
                   >
                     Cancelar
@@ -4354,7 +3084,6 @@ requests==2.31.0
       {showLogin && <LoginModal />}
       {showRegister && <RegisterModal />}
       {showPixPayment && <PixPaymentModal />}
-      {showCreateUser && <CreateUserModal />}
     </div>
   );
 }

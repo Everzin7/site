@@ -1,21 +1,16 @@
-# 🤖 WhatsApp Bot Builder
+# WhatsApp Bot Builder Platform
 
-> Sistema completo para criação e gerenciamento de chatbots inteligentes para WhatsApp com IA avançada
+Uma plataforma completa para criação e gerenciamento de bots do WhatsApp com interface administrativa refatorada e componentizada.
 
-## 📋 Sobre o Projeto
+## 🚀 Recursos
 
-O WhatsApp Bot Builder é uma plataforma completa que permite criar, configurar e gerenciar chatbots para WhatsApp de forma visual e intuitiva. Com IA integrada, sistema de usuários, pagamentos e painel administrativo completo.
-
-## ✨ Principais Funcionalidades
-
-- 🤖 **Construtor Visual de Bots** - Crie bots sem programar
-- 🧠 **IA Conversacional** - Respostas inteligentes baseadas em produtos
-- 🛍️ **Catálogo Integrado** - Gerencie produtos com busca automática
-- 💳 **Sistema de Pagamentos** - PIX, cartão e outras formas
-- 👥 **Gestão de Usuários** - Sistema completo com referências
-- 📊 **Dashboard Avançado** - Estatísticas e relatórios em tempo real
-- 🎁 **Sistema de Giftcards** - Códigos promocionais e bônus
-- 🔐 **Painel Admin** - Controle total do sistema
+- **Construtor de Bot Visual**: Interface intuitiva para criar bots personalizados
+- **Painel Administrativo**: Gerenciamento completo de usuários, senhas e saldos
+- **Sistema de Autenticação**: Login seguro para administradores  
+- **Arquitetura Componentizada**: Código organizado em componentes reutilizáveis
+- **Gerenciamento de Usuários**: Criar, editar e buscar usuários
+- **Controle de Saldos**: Editar e zerar saldos de usuários
+- **Visibilidade de Senhas**: Sistema para exibir/ocultar senhas de usuários
 
 ## 🛠️ Arquitetura Refatorada
 
@@ -183,113 +178,4 @@ Para suporte ou dúvidas sobre o sistema:
 
 ## 📄 Licença
 
-## 🚀 Instalação Rápida
-
-### Opção 1: Instalação Automática (Recomendada)
-
-```bash
-# Clone o repositório
-git clone https://github.com/Everzin7/site.git
-cd site
-
-# Execute o script de instalação (Windows)
-./install-and-run.bat
-
-# Ou no macOS/Linux
-chmod +x install-and-run.sh
-./install-and-run.sh
-```
-
-### Opção 2: Instalação Manual
-
-#### Pré-requisitos
-
-- [Node.js](https://nodejs.org/) (versão 16 ou superior)
-- [Python](https://python.org/) (versão 3.9 ou superior)
-- [MongoDB](https://mongodb.com/) (versão 4.4 ou superior)
-- [Git](https://git-scm.com/)
-
-#### Passo a Passo
-
-1. **Clone o repositório:**
-```bash
-git clone https://github.com/Everzin7/site.git
-cd site
-```
-
-2. **Configure o Backend:**
-```bash
-cd backend
-python -m venv venv
-
-# Windows
-venv\Scripts\activate
-
-# macOS/Linux
-source venv/bin/activate
-
-pip install -r requirements.txt
-```
-
-3. **Configure o Frontend:**
-```bash
-cd ../frontend
-npm install
-```
-
-4. **Configure o MongoDB:**
-```bash
-# Inicie o MongoDB (comando varia por sistema)
-# Windows: mongod
-# macOS: brew services start mongodb-community
-# Linux: sudo systemctl start mongod
-```
-
-5. **Execute o projeto:**
-```bash
-# Terminal 1 - Backend
-cd backend
-python server.py
-
-# Terminal 2 - Frontend  
-cd frontend
-npm start
-```
-
-## 🌐 Acessos
-
-- **Frontend:** http://localhost:3000
-- **Backend API:** http://localhost:8000
-- **Documentação API:** http://localhost:8000/docs
-
-## 👨‍💼 Contas Padrão
-
-O sistema cria automaticamente as seguintes contas:
-
-### Administrador
-- **Email:** adm@ever.com
-- **Senha:** everto1n
-- **Acesso:** Completo ao sistema
-
-### Moderador  
-- **Email:** mod@ever.com
-- **Senha:** mod123
-- **Acesso:** Moderação de usuários
-
-## 📞 Suporte
-
-- **Issues:** https://github.com/Everzin7/site/issues
-- **Documentação:** Veja FUNCIONALIDADES.txt
-- **Email:** Crie uma issue no GitHub
-
-## 📄 Licença
-
-Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE para detalhes.
-
-## 🏆 Créditos
-
-Desenvolvido por **Ever** - Uma solução completa para automação de atendimento WhatsApp.
-
----
-
-⭐ **Se este projeto foi útil, deixe uma estrela no GitHub!**
+Este projeto é open source e está disponível sob a licença MIT.
