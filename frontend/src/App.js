@@ -120,6 +120,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   
   // Estados para autenticação - corrigindo o bug do cursor
   const [loginData, setLoginData] = useState({ email: '', password: '' });
