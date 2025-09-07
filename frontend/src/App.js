@@ -273,15 +273,7 @@ function App() {
         parallaxRef.current.style.transform = `translateY(${rate}px)`;
       }
 
-      const elements = document.querySelectorAll('.scroll-animate');
-      elements.forEach(element => {
-        const elementTop = element.getBoundingClientRect().top;
-        const elementVisible = 150;
-        
-        if (elementTop < window.innerHeight - elementVisible) {
-          element.classList.add('animate-in');
-        }
-      });
+      // Scroll animation removida - elementos visíveis por padrão
 
       const icons = document.querySelectorAll('.floating-icon');
       icons.forEach((icon, index) => {
@@ -336,6 +328,14 @@ function App() {
       }
     };
     testConnection();
+  }, []);
+
+  // Garantir que elementos scroll-animate sejam visíveis imediatamente
+  useEffect(() => {
+    const elements = document.querySelectorAll('.scroll-animate');
+    elements.forEach(element => {
+      element.classList.add('animate-in');
+    });
   }, []);
 
   // Criar bot inicial

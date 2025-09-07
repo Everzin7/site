@@ -103,10 +103,10 @@
   animation: gradient 3s ease infinite;
 }
 
-/* Scroll animations */
+/* Scroll animations - Elementos visíveis por padrão */
 .scroll-animate {
-  opacity: 0;
-  transform: translateY(50px);
+  opacity: 1;
+  transform: translateY(0);
   transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
