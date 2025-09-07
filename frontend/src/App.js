@@ -388,7 +388,7 @@ function App() {
       console.log('📧 Registro com email:', registerData.email);
       console.log('🌐 URL completa:', `${API_BASE}/api/auth/register`);
       
-      const response = await fetchWithRetry(`${API_BASE}/api/auth/register`, {
+      const response = await makeRequest(`${API_BASE}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(registerData)
