@@ -1015,57 +1015,27 @@ function App() {
     }
   };
 
-  // Componente de Login - Versão Simples e Robusta
+  // Modal de Login Ultra Simples
   const LoginModal = () => {
-    const [localLoginData, setLocalLoginData] = useState({ email: '', password: '' });
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const handleSubmit = async (e) => {
       e.preventDefault();
       
-      if (!localLoginData.email || !localLoginData.password) {
-        showNotification('❌ Preencha email e senha', 'error');
+      if (!email || !password) {
+        showNotification('❌ Preencha todos os campos', 'error');
         return;
       }
 
       setIsLoading(true);
+      const success = await doLogin(email, password);
+      setIsLoading(false);
       
-      try {
-        console.log('🔐 Tentando login com:', localLoginData.email);
-        
-        const response = await fetch(`${API_BASE}/api/auth/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(localLoginData)
-        });
-        
-        console.log('📡 Response status:', response.status);
-        
-        if (response.ok) {
-          const userData = await response.json();
-          console.log('✅ Login OK:', userData);
-          
-          setUser(userData);
-          localStorage.setItem('whatsapp_bot_user', JSON.stringify(userData));
-          setBotConfig(prev => ({ ...prev, user_id: userData.id }));
-          setShowLogin(false);
-          showNotification('✅ Login realizado com sucesso!', 'success');
-          setCurrentView('dashboard');
-          
-          // Carregar dados
-          loadUserBots(userData.id);
-          loadDashboardData(userData.id);
-          if (userData.role === 'admin') {
-            loadAdminData();
-          }
-        } else {
-          console.log('❌ Login falhou:', response.status);
-          showNotification('❌ Email ou senha incorretos', 'error');
-        }
-      } catch (error) {
-        console.error('❌ Erro no login:', error);
-        showNotification('❌ Erro no login. Tente novamente.', 'error');
-      } finally {
-        setIsLoading(false);
+      if (success) {
+        setShowLogin(false);
+        setEmail('');
+        setPassword('');
       }
     };
 
@@ -1074,44 +1044,28 @@ function App() {
         <div className="bg-black/60 backdrop-blur-xl p-8 rounded-3xl border border-purple-500/30 max-w-md w-full mx-4">
           <h2 className="text-2xl font-bold text-white mb-6 text-center">Login</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <input
-                type="email"
-                placeholder="Email"
-                value={localLoginData.email}
-                onChange={(e) => setLocalLoginData(prev => ({ ...prev, email: e.target.value }))}
-                className="futuristic-input"
-                required
-                autoComplete="email"
-                autoFocus={false}
-              />
-            </div>
-            <div>
-              <input
-                type="password"
-                placeholder="Senha"
-                value={localLoginData.password}
-                onChange={(e) => setLocalLoginData(prev => ({ ...prev, password: e.target.value }))}
-                className="futuristic-input"
-                required
-                autoComplete="current-password"
-              />
-            </div>
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="futuristic-input"
+              required
+            />
+            <input
+              type="password"
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="futuristic-input"
+              required
+            />
             <button 
               type="submit" 
               disabled={isLoading}
-              className={`futuristic-btn-main w-full flex items-center justify-center space-x-2 ${
-                isLoading ? 'opacity-75 cursor-not-allowed' : ''
-              }`}
+              className="futuristic-btn-main w-full"
             >
-              {isLoading ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  <span>Entrando...</span>
-                </>
-              ) : (
-                <span>Entrar</span>
-              )}
+              {isLoading ? 'Entrando...' : 'Entrar'}
             </button>
           </form>
           <div className="text-center mt-4">
@@ -1119,7 +1073,8 @@ function App() {
               onClick={() => { 
                 setShowLogin(false); 
                 setShowRegister(true); 
-                setLocalLoginData({ email: '', password: '' });
+                setEmail('');
+                setPassword('');
               }}
               className="text-purple-400 hover:text-purple-300"
             >
@@ -1129,7 +1084,8 @@ function App() {
           <button 
             onClick={() => {
               setShowLogin(false);
-              setLocalLoginData({ email: '', password: '' });
+              setEmail('');
+              setPassword('');
             }}
             className="absolute top-4 right-4 text-gray-400 hover:text-white"
           >
