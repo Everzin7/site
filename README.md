@@ -2,9 +2,17 @@
 
 > Sistema completo para criação e gerenciamento de chatbots inteligentes para WhatsApp com IA avançada
 
+[![Demo](https://img.shields.io/badge/Demo-Live-brightgreen)](http://localhost:3000)
+[![Admin](https://img.shields.io/badge/Admin-adm%40adm.com%20%2F%20adm123-blue)](http://localhost:3000)
+[![Mod](https://img.shields.io/badge/Mod-mod%40mod.com%20%2F%20mod123-orange)](http://localhost:3000)
+
 ## 📋 Sobre o Projeto
 
 O WhatsApp Bot Builder é uma plataforma completa que permite criar, configurar e gerenciar chatbots para WhatsApp de forma visual e intuitiva. Com IA integrada, sistema de usuários, pagamentos e painel administrativo completo.
+
+### 🚀 Teste Rápido
+**Admin:** `adm@adm.com` / `adm123`  
+**Moderador:** `mod@mod.com` / `mod123`
 
 ## ✨ Principais Funcionalidades
 
