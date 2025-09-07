@@ -312,7 +312,7 @@ function App() {
       console.log('📧 Login com email:', loginData.email);
       console.log('🌐 URL completa:', `${API_BASE}/api/auth/login`);
       
-      const response = await fetchWithRetry(`${API_BASE}/api/auth/login`, {
+      const response = await makeRequest(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(loginData)
