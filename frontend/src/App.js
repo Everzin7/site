@@ -276,6 +276,36 @@ function App() {
     }
   }, [user]);
 
+  // Função auxiliar para fazer requests com retry
+  const fetchWithRetry = async (url, options, maxRetries = 3) => {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        console.log(`🌐 Tentativa ${attempt}/${maxRetries} para ${url}`);
+        
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+        
+        const response = await fetch(url, { 
+          ...options, 
+          signal: controller.signal 
+        });
+        
+        clearTimeout(timeoutId);
+        return response;
+        
+      } catch (error) {
+        console.log(`❌ Tentativa ${attempt} falhou:`, error.message);
+        
+        if (attempt === maxRetries) {
+          throw error;
+        }
+        
+        // Aguardar antes de tentar novamente
+        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+      }
+    }
+  };
+
   // Funções de autenticação
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -290,8 +320,10 @@ function App() {
     }
 
     try {
-      console.log('🌐 Fazendo requisição de login...');
-      const response = await fetch(`${API_BASE}/api/auth/login`, {
+      console.log('📧 Login com email:', loginData.email);
+      console.log('🌐 URL completa:', `${API_BASE}/api/auth/login`);
+      
+      const response = await fetchWithRetry(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(loginData)
@@ -325,11 +357,12 @@ function App() {
       }
     } catch (error) {
       console.error('💥 Erro capturado no login:', error);
-      if (error.name === 'TypeError' && error.message.includes('fetch')) {
-        console.log('🌐 Erro de rede detectado');
+      
+      if (error.name === 'AbortError') {
+        showNotification('❌ Timeout na conexão. Tente novamente.', 'error');
+      } else if (error.message.includes('fetch') || error.message.includes('Failed to fetch')) {
         showNotification('❌ Erro de conexão. Verifique sua internet e tente novamente.', 'error');
       } else {
-        console.log('❌ Erro genérico:', error.message);
         showNotification('❌ Erro no login: ' + error.message, 'error');
       }
     }
