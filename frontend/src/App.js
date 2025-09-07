@@ -1096,63 +1096,34 @@ function App() {
     );
   };
 
-  // Componente de Registro - Versão Simples e Robusta
+  // Modal de Registro Ultra Simples
   const RegisterModal = () => {
-    const [localRegisterData, setLocalRegisterData] = useState({
-      name: '',
-      email: '',
-      password: '',
-      referralCode: ''
-    });
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const handleSubmit = async (e) => {
       e.preventDefault();
       
-      if (!localRegisterData.name || !localRegisterData.email || !localRegisterData.password) {
+      if (!name || !email || !password) {
         showNotification('❌ Preencha todos os campos', 'error');
         return;
       }
       
-      if (localRegisterData.password.length < 6) {
+      if (password.length < 6) {
         showNotification('❌ Senha deve ter pelo menos 6 caracteres', 'error');
         return;
       }
       
       setIsLoading(true);
+      const success = await doRegister(name, email, password);
+      setIsLoading(false);
       
-      try {
-        console.log('📝 Tentando registro com:', localRegisterData.email);
-        
-        const response = await fetch(`${API_BASE}/api/auth/register`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(localRegisterData)
-        });
-        
-        console.log('📡 Response status:', response.status);
-        
-        if (response.ok) {
-          const userData = await response.json();
-          console.log('✅ Registro OK:', userData);
-          
-          setUser(userData);
-          localStorage.setItem('whatsapp_bot_user', JSON.stringify(userData));
-          setBotConfig(prev => ({ ...prev, user_id: userData.id }));
-          setShowRegister(false);
-          showNotification('✅ Conta criada com sucesso!', 'success');
-          setCurrentView('dashboard');
-          loadDashboardData(userData.id);
-        } else if (response.status === 400) {
-          showNotification('❌ Email já cadastrado', 'error');
-        } else {
-          console.log('❌ Registro falhou:', response.status);
-          showNotification('❌ Erro no servidor', 'error');
-        }
-      } catch (error) {
-        console.error('❌ Erro no registro:', error);
-        showNotification('❌ Erro no registro. Tente novamente.', 'error');
-      } finally {
-        setIsLoading(false);
+      if (success) {
+        setShowRegister(false);
+        setName('');
+        setEmail('');
+        setPassword('');
       }
     };
 
@@ -1161,66 +1132,37 @@ function App() {
         <div className="bg-black/60 backdrop-blur-xl p-8 rounded-3xl border border-purple-500/30 max-w-md w-full mx-4">
           <h2 className="text-2xl font-bold text-white mb-6 text-center">Criar Conta</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <input
-                type="text"
-                placeholder="Como quer ser chamado?"
-                value={localRegisterData.name}
-                onChange={(e) => setLocalRegisterData(prev => ({ ...prev, name: e.target.value }))}
-                className="futuristic-input"
-                required
-                autoComplete="name"
-                autoFocus={false}
-              />
-            </div>
-            <div>
-              <input
-                type="email"
-                placeholder="Email"
-                value={localRegisterData.email}
-                onChange={(e) => setLocalRegisterData(prev => ({ ...prev, email: e.target.value }))}
-                className="futuristic-input"
-                required
-                autoComplete="email"
-              />
-            </div>
-            <div>
-              <input
-                type="password"
-                placeholder="Senha (mínimo 6 caracteres)"
-                value={localRegisterData.password}
-                onChange={(e) => setLocalRegisterData(prev => ({ ...prev, password: e.target.value }))}
-                className="futuristic-input"
-                required
-                minLength="6"
-                autoComplete="new-password"
-              />
-            </div>
-            <div>
-              <input
-                type="text"
-                placeholder="Código de indicação (opcional)"
-                value={localRegisterData.referralCode}
-                onChange={(e) => setLocalRegisterData(prev => ({ ...prev, referralCode: e.target.value }))}
-                className="futuristic-input"
-                autoComplete="off"
-              />
-            </div>
+            <input
+              type="text"
+              placeholder="Nome"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="futuristic-input"
+              required
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="futuristic-input"
+              required
+            />
+            <input
+              type="password"
+              placeholder="Senha (mínimo 6 caracteres)"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="futuristic-input"
+              required
+              minLength="6"
+            />
             <button 
               type="submit" 
               disabled={isLoading}
-              className={`futuristic-btn-main w-full flex items-center justify-center space-x-2 ${
-                isLoading ? 'opacity-75 cursor-not-allowed' : ''
-              }`}
+              className="futuristic-btn-main w-full"
             >
-              {isLoading ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  <span>Criando...</span>
-                </>
-              ) : (
-                <span>Criar Conta</span>
-              )}
+              {isLoading ? 'Criando...' : 'Criar Conta'}
             </button>
           </form>
           <div className="text-center mt-4">
@@ -1228,7 +1170,9 @@ function App() {
               onClick={() => { 
                 setShowRegister(false); 
                 setShowLogin(true); 
-                setLocalRegisterData({ name: '', email: '', password: '', referralCode: '' });
+                setName('');
+                setEmail('');
+                setPassword('');
               }}
               className="text-purple-400 hover:text-purple-300"
             >
@@ -1238,7 +1182,9 @@ function App() {
           <button 
             onClick={() => {
               setShowRegister(false);
-              setLocalRegisterData({ name: '', email: '', password: '', referralCode: '' });
+              setName('');
+              setEmail('');
+              setPassword('');
             }}
             className="absolute top-4 right-4 text-gray-400 hover:text-white"
           >
