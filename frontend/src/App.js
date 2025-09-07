@@ -1047,14 +1047,13 @@ function App() {
     }
   };
 
-  // Componente de Login - Corrigido para manter foco
+  // Componente de Login - Versão Simples e Robusta
   const LoginModal = () => {
     const [localLoginData, setLocalLoginData] = useState({ email: '', password: '' });
 
     const handleSubmit = async (e) => {
       e.preventDefault();
       
-      // Validação básica
       if (!localLoginData.email || !localLoginData.password) {
         showNotification('❌ Preencha email e senha', 'error');
         return;
@@ -1063,11 +1062,9 @@ function App() {
       setIsLoading(true);
       
       try {
-        console.log('🔐 Login modal - tentativa iniciada');
-        console.log('📧 Email:', localLoginData.email);
-        console.log('🌐 URL:', `${API_BASE}/api/auth/login`);
+        console.log('🔐 Tentando login com:', localLoginData.email);
         
-        const response = await makeRequest(`${API_BASE}/api/auth/login`, {
+        const response = await fetch(`${API_BASE}/api/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(localLoginData)
@@ -1077,30 +1074,27 @@ function App() {
         
         if (response.ok) {
           const userData = await response.json();
-          console.log('✅ Login bem-sucedido:', userData.name);
+          console.log('✅ Login OK:', userData);
+          
           setUser(userData);
           localStorage.setItem('whatsapp_bot_user', JSON.stringify(userData));
           setBotConfig(prev => ({ ...prev, user_id: userData.id }));
           setShowLogin(false);
           showNotification('✅ Login realizado com sucesso!', 'success');
           setCurrentView('dashboard');
+          
+          // Carregar dados
           loadUserBots(userData.id);
           loadDashboardData(userData.id);
-          
-          // Carregar dados de admin se for admin
           if (userData.role === 'admin') {
             loadAdminData();
           }
-        } else if (response.status === 401) {
-          console.log('❌ Login inválido - 401');
-          showNotification('❌ Email ou senha incorretos', 'error');
         } else {
-          console.log('❌ Erro no servidor:', response.status);
-          const errorData = await response.json().catch(() => ({ detail: 'Erro no servidor' }));
-          showNotification('❌ Erro no login: ' + (errorData.detail || 'Erro desconhecido'), 'error');
+          console.log('❌ Login falhou:', response.status);
+          showNotification('❌ Email ou senha incorretos', 'error');
         }
       } catch (error) {
-        console.error('💥 Erro capturado no login modal:', error);
+        console.error('❌ Erro no login:', error);
         showNotification('❌ Erro no login. Tente novamente.', 'error');
       } finally {
         setIsLoading(false);
