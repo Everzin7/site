@@ -3,9 +3,6 @@ import './App.css';
 
 const API_BASE = process.env.REACT_APP_BACKEND_URL;
 
-console.log('🔍 API_BASE configurado como:', API_BASE);
-console.log('🔍 process.env.REACT_APP_BACKEND_URL:', process.env.REACT_APP_BACKEND_URL);
-
 // Ícones SVG personalizados mais sofisticados e menores
 const Icons = {
   robot: (
