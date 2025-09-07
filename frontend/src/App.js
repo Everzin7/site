@@ -1119,29 +1119,25 @@ function App() {
 
     const handleSubmit = async (e) => {
       e.preventDefault();
-      try {
-        const response = await fetch(`${API_BASE}/api/auth/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(localLoginData)
-        });
-        
-        if (response.ok) {
-          const userData = await response.json();
-          setUser(userData);
-          localStorage.setItem('whatsapp_bot_user', JSON.stringify(userData));
-          setBotConfig(prev => ({ ...prev, user_id: userData.id }));
-          setShowLogin(false);
-          showNotification('✅ Login realizado com sucesso!', 'success');
-          setCurrentView('dashboard');
-          loadUserBots(userData.id);
-          loadDashboardData(userData.id);
-        } else {
-          throw new Error('Credenciais inválidas');
-        }
-      } catch (error) {
-        showNotification('❌ Erro no login: ' + error.message, 'error');
-      }
+      
+      // Atualizar os dados globais e chamar a função principal
+      setLoginData(localLoginData);
+      
+      // Simular o evento com os dados locais
+      const fakeEvent = {
+        preventDefault: () => {},
+        target: { elements: {} }
+      };
+      
+      // Criar um override temporário para usar dados locais
+      const originalLoginData = loginData;
+      setLoginData(localLoginData);
+      
+      // Aguardar um pouco para o estado atualizar e chamar a função principal
+      setTimeout(async () => {
+        await handleLogin(fakeEvent);
+        setLoginData(originalLoginData); // Restaurar dados originais
+      }, 0);
     };
 
     return (
@@ -1172,8 +1168,21 @@ function App() {
                 autoComplete="current-password"
               />
             </div>
-            <button type="submit" className="futuristic-btn-main w-full">
-              Entrar
+            <button 
+              type="submit" 
+              disabled={isLoading}
+              className={`futuristic-btn-main w-full flex items-center justify-center space-x-2 ${
+                isLoading ? 'opacity-75 cursor-not-allowed' : ''
+              }`}
+            >
+              {isLoading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  <span>Entrando...</span>
+                </>
+              ) : (
+                <span>Entrar</span>
+              )}
             </button>
           </form>
           <div className="text-center mt-4">
