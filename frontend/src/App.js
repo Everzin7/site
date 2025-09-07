@@ -274,107 +274,75 @@ function App() {
     }
   }, [user]);
 
-  // Função auxiliar para fazer requests simples
-  const makeRequest = async (url, options) => {
+  // Login simplificado ao máximo
+  const doLogin = async (email, password) => {
     try {
-      console.log(`🌐 Request para: ${url}`);
-      const response = await fetch(url, options);
-      console.log(`📡 Status: ${response.status}`);
-      return response;
-    } catch (error) {
-      console.error(`❌ Erro:`, error);
-      throw error;
-    }
-  };
-
-  // Função de login simples e direta
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    
-    if (!loginData.email || !loginData.password) {
-      showNotification('❌ Preencha email e senha', 'error');
-      return;
-    }
-
-    setIsLoading(true);
-    
-    try {
-      const response = await fetch(`${API_BASE}/api/auth/login`, {
+      console.log('🔐 Fazendo login...', email);
+      
+      const res = await fetch('http://localhost:8001/api/auth/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(loginData)
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
       });
       
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData);
-        localStorage.setItem('whatsapp_bot_user', JSON.stringify(userData));
-        setBotConfig(prev => ({ ...prev, user_id: userData.id }));
-        setShowLogin(false);
-        showNotification('✅ Login realizado com sucesso!', 'success');
-        setCurrentView('dashboard');
+      console.log('📡 Status:', res.status);
+      
+      if (res.ok) {
+        const user = await res.json();
+        console.log('✅ User:', user);
         
-        // Carregar dados
-        loadUserBots(userData.id);
-        loadDashboardData(userData.id);
-        if (userData.role === 'admin') {
-          loadAdminData();
-        }
-      } else if (response.status === 401) {
-        showNotification('❌ Email ou senha incorretos', 'error');
+        setUser(user);
+        localStorage.setItem('whatsapp_bot_user', JSON.stringify(user));
+        setCurrentView('dashboard');
+        showNotification('✅ Login realizado!', 'success');
+        return true;
       } else {
-        showNotification('❌ Erro no servidor', 'error');
+        console.log('❌ Login falhou');
+        showNotification('❌ Email ou senha incorretos', 'error');
+        return false;
       }
     } catch (error) {
-      console.error('Erro no login:', error);
-      showNotification('❌ Erro no login. Tente novamente.', 'error');
-    } finally {
-      setIsLoading(false);
+      console.error('❌ Erro:', error);
+      showNotification('❌ Erro de conexão', 'error');
+      return false;
     }
   };
 
-  // Função de registro simples e direta  
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    
-    if (!registerData.name || !registerData.email || !registerData.password) {
-      showNotification('❌ Preencha todos os campos', 'error');
-      return;
-    }
-    
-    if (registerData.password.length < 6) {
-      showNotification('❌ Senha deve ter pelo menos 6 caracteres', 'error');
-      return;
-    }
-
-    setIsLoading(true);
-    
+  // Registro simplificado ao máximo
+  const doRegister = async (name, email, password) => {
     try {
-      const response = await fetch(`${API_BASE}/api/auth/register`, {
+      console.log('📝 Fazendo registro...', email);
+      
+      const res = await fetch('http://localhost:8001/api/auth/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(registerData)
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, email, password })
       });
       
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData);
-        localStorage.setItem('whatsapp_bot_user', JSON.stringify(userData));
-        setBotConfig(prev => ({ ...prev, user_id: userData.id }));
-        setShowRegister(false);
-        showNotification('✅ Conta criada com sucesso!', 'success');
+      console.log('📡 Status:', res.status);
+      
+      if (res.ok) {
+        const user = await res.json();
+        console.log('✅ User:', user);
+        
+        setUser(user);
+        localStorage.setItem('whatsapp_bot_user', JSON.stringify(user));
         setCurrentView('dashboard');
-        loadDashboardData(userData.id);
-      } else if (response.status === 400) {
-        showNotification('❌ Email já cadastrado', 'error');
+        showNotification('✅ Conta criada!', 'success');
+        return true;
       } else {
-        showNotification('❌ Erro no servidor', 'error');
+        console.log('❌ Registro falhou');
+        showNotification('❌ Email já cadastrado', 'error');
+        return false;
       }
     } catch (error) {
-      console.error('Erro no registro:', error);
-      showNotification('❌ Erro no registro. Tente novamente.', 'error');
-    } finally {
-      setIsLoading(false);
+      console.error('❌ Erro:', error);
+      showNotification('❌ Erro de conexão', 'error');
+      return false;
     }
   };
 
