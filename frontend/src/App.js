@@ -1172,7 +1172,7 @@ function App() {
     );
   };
 
-  // Componente de Registro - Corrigido para manter foco  
+  // Componente de Registro - Versão Simples e Robusta
   const RegisterModal = () => {
     const [localRegisterData, setLocalRegisterData] = useState({
       name: '',
@@ -1184,7 +1184,6 @@ function App() {
     const handleSubmit = async (e) => {
       e.preventDefault();
       
-      // Validações
       if (!localRegisterData.name || !localRegisterData.email || !localRegisterData.password) {
         showNotification('❌ Preencha todos os campos', 'error');
         return;
@@ -1194,22 +1193,13 @@ function App() {
         showNotification('❌ Senha deve ter pelo menos 6 caracteres', 'error');
         return;
       }
-
-      // Validação básica de email
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(localRegisterData.email)) {
-        showNotification('❌ Email inválido', 'error');
-        return;
-      }
       
       setIsLoading(true);
       
       try {
-        console.log('📝 Registro modal - tentativa iniciada');
-        console.log('📧 Email:', localRegisterData.email);
-        console.log('🌐 URL:', `${API_BASE}/api/auth/register`);
+        console.log('📝 Tentando registro com:', localRegisterData.email);
         
-        const response = await makeRequest(`${API_BASE}/api/auth/register`, {
+        const response = await fetch(`${API_BASE}/api/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(localRegisterData)
@@ -1219,25 +1209,23 @@ function App() {
         
         if (response.ok) {
           const userData = await response.json();
-          console.log('✅ Registro bem-sucedido:', userData.name);
+          console.log('✅ Registro OK:', userData);
+          
           setUser(userData);
           localStorage.setItem('whatsapp_bot_user', JSON.stringify(userData));
           setBotConfig(prev => ({ ...prev, user_id: userData.id }));
           setShowRegister(false);
-          showNotification('✅ Conta criada e login automático realizado!', 'success');
+          showNotification('✅ Conta criada com sucesso!', 'success');
           setCurrentView('dashboard');
           loadDashboardData(userData.id);
         } else if (response.status === 400) {
-          console.log('❌ Erro de validação - 400');
-          const errorData = await response.json().catch(() => ({ detail: 'Email já cadastrado' }));
-          showNotification('❌ ' + (errorData.detail || 'Email já cadastrado'), 'error');
+          showNotification('❌ Email já cadastrado', 'error');
         } else {
-          console.log('❌ Erro no servidor:', response.status);
-          const errorData = await response.json().catch(() => ({ detail: 'Erro no servidor' }));
-          showNotification('❌ Erro no registro: ' + (errorData.detail || 'Erro desconhecido'), 'error');
+          console.log('❌ Registro falhou:', response.status);
+          showNotification('❌ Erro no servidor', 'error');
         }
       } catch (error) {
-        console.error('💥 Erro capturado no registro modal:', error);
+        console.error('❌ Erro no registro:', error);
         showNotification('❌ Erro no registro. Tente novamente.', 'error');
       } finally {
         setIsLoading(false);
