@@ -410,14 +410,7 @@ function App() {
       }
     } catch (error) {
       console.error('💥 Erro capturado no registro:', error);
-      
-      if (error.name === 'AbortError') {
-        showNotification('❌ Timeout na conexão. Tente novamente.', 'error');
-      } else if (error.message.includes('fetch') || error.message.includes('Failed to fetch')) {
-        showNotification('❌ Erro de conexão. Verifique sua internet e tente novamente.', 'error');
-      } else {
-        showNotification('❌ Erro no registro: ' + error.message, 'error');
-      }
+      showNotification('❌ Erro no registro. Tente novamente.', 'error');
     } finally {
       setIsLoading(false);
     }
