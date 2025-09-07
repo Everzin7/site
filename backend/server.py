@@ -1280,4 +1280,12 @@ async def list_users_with_passwords(admin_user_id: str):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    import os
+    
+    # Porta do Railway ou padrão 8000
+    port = int(os.environ.get("PORT", 8000))
+    
+    # Host para produção
+    host = "0.0.0.0" if os.environ.get("RAILWAY_ENVIRONMENT") else "127.0.0.1"
+    
+    uvicorn.run(app, host=host, port=port)

@@ -1,185 +1,25 @@
-# REQUISITOS DO SISTEMA - WhatsApp Bot Builder
-# ================================================
-
-# SOFTWARE NECESSÁRIO
-# --------------------
-
-Node.js (versão 16 ou superior)
-- Download: https://nodejs.org/
-- Verificar instalação: node --version
-- Descrição: Runtime JavaScript para executar o frontend React
-
-Python (versão 3.9 ou superior)
-- Download: https://python.org/downloads/
-- Verificar instalação: python --version
-- Descrição: Linguagem de programação para o backend FastAPI
-
-MongoDB (versão 4.4 ou superior)
-- Download: https://mongodb.com/try/download/community
-- Verificar instalação: mongo --version
-- Descrição: Banco de dados NoSQL para armazenar dados do sistema
-
-Git (versão 2.0 ou superior)
-- Download: https://git-scm.com/downloads
-- Verificar instalação: git --version
-- Descrição: Sistema de controle de versão
-
-
-# DEPENDÊNCIAS PYTHON (backend/requirements.txt)
-# ----------------------------------------------
-
-fastapi==0.104.1
-- Framework web moderno e rápido para APIs
-
-uvicorn[standard]==0.24.0
-- Servidor ASGI para rodar aplicações FastAPI
-
-motor==3.3.2
-- Driver assíncrono oficial do MongoDB para Python
-
-pydantic==2.5.0
-- Validação de dados usando type hints do Python
-
-python-dotenv==1.0.0
-- Carregamento de variáveis de ambiente de arquivos .env
-
-python-multipart==0.0.6
-- Suporte para upload de arquivos multipart/form-data
-
-# Dependências de segurança e utilitários
-hashlib (built-in)
-- Criptografia de senhas com SHA-256
-
-secrets (built-in)
-- Geração de códigos de referência seguros
-
-datetime (built-in)
-- Manipulação de datas e horários
-
-uuid (built-in)
-- Geração de identificadores únicos
-
-
-# DEPENDÊNCIAS NODE.JS (frontend/package.json)
-# --------------------------------------------
-
-React (^18.2.0)
-- Biblioteca JavaScript para construir interfaces de usuário
-
-@craco/craco (^7.1.0)
-- Create React App Configuration Override
-
-Tailwind CSS (^3.3.0)
-- Framework CSS utilitário para estilização rápida
-
-shadcn/ui components
-- Componentes de UI modernos e acessíveis
-
-Lucide React
-- Ícones SVG otimizados para React
-
-
-# REQUISITOS DE SISTEMA
-# ---------------------
-
-Memória RAM: Mínimo 2GB, Recomendado 4GB+
-- Backend Python: ~200MB
-- Frontend React (desenvolvimento): ~500MB
-- MongoDB: ~1GB
-
-Espaço em Disco: Mínimo 5GB
-- Código fonte: ~100MB
-- Node modules: ~500MB
-- Virtual environment Python: ~200MB
-- Banco de dados MongoDB: ~1GB+
-- Logs e arquivos temporários: ~500MB
-
-Processador: Qualquer processador moderno (x64)
-- Intel Core i3+ ou AMD equivalente
-- Suporte a 64 bits obrigatório
-
-Sistema Operacional:
-- Windows 10/11 (x64)
-- macOS 10.15+ (Catalina ou superior)
-- Linux Ubuntu 18.04+ / CentOS 7+ / Debian 10+
-
-Conexão com Internet:
-- Necessária para download de dependências
-- Necessária para funcionamento completo (APIs externas)
-- Velocidade mínima: 10 Mbps para desenvolvimento
-
-
-# PORTAS UTILIZADAS
-# -----------------
-
-3000 - Frontend React (desenvolvimento)
-8000 - Backend FastAPI
-27017 - MongoDB (padrão)
-
-Certifique-se de que essas portas estejam livres antes da instalação.
-
-
-# COMANDOS DE VERIFICAÇÃO
-# -----------------------
-
-# Verificar se todas as dependências estão instaladas:
-
-node --version          # Deve retornar v16.0.0 ou superior
-npm --version           # Deve retornar 8.0.0 ou superior
-python --version        # Deve retornar 3.9.0 ou superior
-pip --version           # Deve retornar 21.0.0 ou superior
-mongo --version         # Deve retornar 4.4.0 ou superior
-git --version           # Deve retornar 2.0.0 ou superior
-
-
-# INSTALAÇÃO AUTOMÁTICA
-# ---------------------
-
-Execute um dos scripts de instalação:
-
-Windows: install-and-run.bat
-macOS/Linux: install-and-run.sh
-
-Os scripts irão:
-1. Verificar pré-requisitos
-2. Instalar dependências automaticamente
-3. Configurar ambiente virtual Python
-4. Instalar pacotes Node.js
-5. Iniciar MongoDB (se não estiver rodando)
-6. Executar backend e frontend simultaneamente
-
-
-# SOLUÇÃO DE PROBLEMAS
-# --------------------
-
-Erro "node not found":
-- Instale Node.js e reinicie o terminal
-
-Erro "python not found":
-- Instale Python e adicione ao PATH do sistema
-
-Erro "mongo not found":
-- Instale MongoDB Community Edition
-
-Erro "Permission denied":
-- No Linux/macOS: use sudo quando necessário
-- No Windows: execute como Administrador
-
-Erro "Port already in use":
-- Mate processos nas portas 3000, 8000 ou 27017
-- Windows: netstat -ano | findstr :8000
-- Linux/macOS: lsof -i :8000
-
-
-# CONFIGURAÇÃO OPCIONAL
-# ---------------------
-
-Variáveis de ambiente personalizadas (backend/.env):
-MONGO_URL=mongodb://localhost:27017
-DEBUG=true
-SECRET_KEY=sua_chave_personalizada
-
-Configuração de desenvolvimento:
-- Hot reload ativado por padrão
-- Debug mode habilitado
-- CORS configurado para desenvolvimento local
+fastapi==0.110.1
+uvicorn==0.25.0
+boto3>=1.34.129
+requests-oauthlib>=2.0.0
+cryptography>=42.0.8
+python-dotenv>=1.0.1
+pymongo==4.5.0
+pydantic>=2.6.4
+email-validator>=2.2.0
+pyjwt>=2.10.1
+passlib>=1.7.4
+tzdata>=2024.2
+motor==3.3.1
+pytest>=8.0.0
+black>=24.1.1
+isort>=5.13.2
+flake8>=7.0.0
+mypy>=1.8.0
+python-jose>=3.3.0
+requests>=2.31.0
+pandas>=2.2.0
+numpy>=1.26.0
+python-multipart>=0.0.9
+jq>=1.6.0
+typer>=0.9.0
