@@ -1,6 +1,7 @@
 # 🤖 WhatsApp Bot Builder (PROTÓTIPO)
 
 > Sistema completo para criação e gerenciamento de chatbots inteligentes para WhatsApp com IA avançada
+> (Precisa refatorar código e etc. Apenas coloquei uma das minhas ideias em prática para você continuar :))
 
 [![Demo](https://img.shields.io/badge/Demo-Live-brightgreen)](http://localhost:3000)
 [![Admin](https://img.shields.io/badge/Admin-adm%40adm.com%20%2F%20adm123-blue)](http://localhost:3000)
