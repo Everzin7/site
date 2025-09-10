@@ -1,6 +1,7 @@
 # 🤖 WhatsApp Bot Builder (PROTÓTIPO)
 
 > Sistema completo para criação e gerenciamento de chatbots inteligentes para WhatsApp com IA avançada
+> Projeto feito 100% com IA, apenas dei instruções de acordo com minhas ideias.
 > (Precisa refatorar código e etc. Apenas coloquei uma das minhas ideias em prática para você continuar :))
 
 [![Demo](https://img.shields.io/badge/Demo-Live-brightgreen)](http://localhost:3000)
@@ -10,6 +11,14 @@
 ## 📋 Sobre o Projeto
 
 O WhatsApp Bot Builder é uma plataforma completa que permite criar, configurar e gerenciar chatbots para WhatsApp de forma visual e intuitiva. Com IA integrada, sistema de usuários, pagamentos e painel administrativo completo.
+
+Basicamente você faz as funcionalidades do bot, registra seu catálogo, configura palavras chaves e configura do jeito que quiser.
+Após você (ou o cliente) terminar as configurações, ele será redirecionado para o pagamento, o sistema conta com saldo, se o usuário tiver saldo adicionado > ele consegue pagar com o saldo
+se ele não tiver saldo, pode adicionar por alguma das formas de pagamento (ainda não atribuidas).
+
+Após o pagamento, o bot que ele construiu vai para a página de meus pedidos, e será possível baixar o bot com todas as funcionalidades que ele criou em python! E ainda vai um requeriments.txt e um readme para caso o usuário tenha alguma dúvida!
+
+o usuário admin também consegue gerar um giftcard para o usuario utilizar e adicionar saldo automaticamente na sua conta :)
 
 ### 🚀 Teste Rápido
 **Admin:** `adm@adm.com` / `adm123`  
