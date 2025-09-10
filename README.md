@@ -1,4 +1,4 @@
-# 🤖 WhatsApp Bot Builder
+# 🤖 WhatsApp Bot Builder (PROTÓTIPO)
 
 > Sistema completo para criação e gerenciamento de chatbots inteligentes para WhatsApp com IA avançada
 
